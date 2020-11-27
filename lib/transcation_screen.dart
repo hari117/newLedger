@@ -234,7 +234,7 @@ class _TranscationScreenState extends State<TranscationScreen> {
                            dateTime=null;
                            Navigator.pop(context);
                          }
-
+                          print("");
 
 
 
