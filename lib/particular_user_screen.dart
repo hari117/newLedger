@@ -219,7 +219,7 @@ class _ParticularUserScreenState extends State<ParticularUserScreen> {
           Navigator.push(
               context,
               new MaterialPageRoute(
-                  builder: (context) => TranscationScreen(name: widget.name)));
+                  builder: (context) =>  TranscationScreen(name: widget.name)));
         },
         child: Icon(
           Icons.attach_money,
