@@ -2,8 +2,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:newledger/globalState.dart';
 import 'package:newledger/newhome_screen.dart';
-
+import 'package:provider/provider.dart';
 
 GoogleSignIn google = GoogleSignIn();
 CollectionReference userAccountRef =
@@ -37,12 +38,15 @@ class _LoginScreenState extends State<LoginScreen> {
     if (account != null) {
       checkUsersInFireBase();
       setState(() {
-        isAuth = true;
-        print("********************* ${google.currentUser.id}***********************************");
+        Provider.of<GlobalState>(context,listen: false).setBool(true);
+       // isAuth = true;
+        print(
+            "********************* ${google.currentUser.id}***********************************");
       });
     } else {
       setState(() {
-        isAuth = false;
+        Provider.of<GlobalState>(context,listen: false).setBool(false);
+        //isAuth = false;
       });
     }
   }
@@ -63,9 +67,13 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-
-    return isAuth ? NewHomeScreen() : unAuthScreen();
-
+    return Consumer<GlobalState>(
+      builder: (context, model, child)
+      {
+        return model.isAuth ?NewHomeScreen() : unAuthScreen();
+      },
+    );
+  //  return isAuth ? NewHomeScreen() : unAuthScreen();
   }
 
   unAuthScreen() {
