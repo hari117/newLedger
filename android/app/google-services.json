@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "1006416644162",
+    "firebase_url": "https://newledgerapp.firebaseio.com",
+    "project_id": "newledgerapp",
+    "storage_bucket": "newledgerapp.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1006416644162:android:9a469e16c8044a525f05db",
+        "android_client_info": {
+          "package_name": "vip.hari.newledger"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1006416644162-lmf1lo4brnt7fq7hutt6eqcl9i413sg9.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "vip.hari.newledger",
+            "certificate_hash": "bbf2fdd2ef271ea8b2f872242e5514232f4e7e54"
+          }
+        },
+        {
+          "client_id": "1006416644162-4aja33n3le735cu85s66ptbsr5eib64f.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDAqy22ccUyqGAz73xJyD2vBi54l8dLprA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1006416644162-4aja33n3le735cu85s66ptbsr5eib64f.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
