@@ -1,8 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:newledger/view/view_screens/login_screen.dart';
+import 'package:newledger/view/view_screens/splash_screen.dart';
 import 'package:newledger/view/view_screens/particular_user_screen.dart';
+import 'package:newledger/view_models/firebase_activites.dart';
 
 class UserCard extends StatefulWidget {
   String userName;
@@ -29,14 +30,16 @@ class _UserCardState extends State<UserCard> {
                   child: Text("YES"),
                   onPressed: () async {
                     //Put your code here which you want to execute on Yes button click.
+                    FirebaseCenter.deleteParticularUser(widget.userName);
                     Navigator.of(context).pop();
-                    await Firestore.instance
-                        .collection("UserAccouts")
-                        .doc(google.currentUser.id)
-                        .collection("allUsersList")
-                        .doc(widget.userName)
-                        .delete();
-                    deleteAllTranscations(widget.userName);
+                    // await Firestore.instance
+                    //     .collection("UserAccouts")
+                    //     .doc(google.currentUser.id)
+                    //     .collection("allUsersList")
+                    //     .doc(widget.userName)
+                    //     .delete();
+                    // deleteAllTranscations(widget.userName);
+
                   },
                 ),
                 FlatButton(
@@ -144,14 +147,16 @@ class _UserCardState extends State<UserCard> {
             int total = 0;
             int a = dc["inCredit"];
             int b = dc["inDebit"];
-            int c = a - b;
+
             if (a > b) {
+              int c = a - b;
               return Text(
                 "\$ $c Rs",
                 style: GoogleFonts.muli(
                     letterSpacing: 1, fontSize: 20, color: Colors.green),
               );
             } else {
+              int c = b-a;
               return Text(
                 "\$ $c Rs",
                 style: GoogleFonts.muli(

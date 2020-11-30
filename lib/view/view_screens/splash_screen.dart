@@ -5,12 +5,14 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:newledger/model/globalState.dart';
 import 'package:newledger/view/view_screens/newhome_screen.dart';
 import 'package:newledger/view_models/firebase_activites.dart';
+import 'package:newledger/view_models/helper_files.dart';
 import 'package:provider/provider.dart';
 
 GoogleSignIn google = GoogleSignIn();
-CollectionReference userAccountRef = Firestore.instance.collection("UserAccouts");
-CollectionReference allTranscationRef = Firestore.instance.collection("Transactions");
-
+CollectionReference userAccountRef =
+    Firestore.instance.collection("UserAccouts");
+CollectionReference allTranscationRef =
+    Firestore.instance.collection("Transactions");
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -22,9 +24,13 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   void initState() {
-
     // TODO: implement initState
     super.initState();
+
+    checkGoogleAuth();
+  }
+
+  checkGoogleAuth() {
     google.onCurrentUserChanged.listen((GoogleSignInAccount account) {
       hangleSignIn(account);
     });
@@ -35,46 +41,24 @@ class _LoginScreenState extends State<LoginScreen> {
 
   hangleSignIn(GoogleSignInAccount account) {
     if (account != null) {
-      checkUsersInFireBase();
+      FirebaseCenter.checkUsersInFireBase(google.currentUser.id);
 
-        Provider.of<GlobalState>(context,listen: false).setBool(true);
-       // isAuth = true;
-
-
+      Provider.of<GlobalState>(context, listen: false).setBool(true);
     } else {
-
-        Provider.of<GlobalState>(context,listen: false).setBool(false);
-        //isAuth = false;
-
-    }
-  }
-
-  checkUsersInFireBase() async {
-    DocumentSnapshot doc =
-        await FirebaseCenter.userAccountRef.document(google.currentUser.id).get();
-    if (!doc.exists) {
-      Map<String, dynamic> map = {
-        "name": google.currentUser.displayName,
-        "id": google.currentUser.id,
-        "email": google.currentUser.email,
-        "photoUrl": google.currentUser.photoUrl,
-      };
-      await userAccountRef.doc(google.currentUser.id).setData(map);
+      Provider.of<GlobalState>(context, listen: false).setBool(false);
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return Consumer<GlobalState>(
-      builder: (context, model, child)
-      {
-        return model.isAuth ?NewHomeScreen() : unAuthScreen();
+      builder: (context, model, child) {
+        return model.isAuth ? NewHomeScreen() : loginScreen();
       },
     );
-  //  return isAuth ? NewHomeScreen() : unAuthScreen();
   }
 
-  unAuthScreen() {
+  loginScreen() {
     return Scaffold(
       body: Center(
         child: Column(
@@ -92,9 +76,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     "assets/svg/google.svg",
                     width: 30,
                   ),
-                  SizedBox(
-                    width: 11,
-                  ),
+                  $helperFile.W10(),
                   Text(
                     "Google SignIn",
                     style: TextStyle(fontSize: 20),

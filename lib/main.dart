@@ -2,7 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:newledger/model/globalState.dart';
-import 'package:newledger/view/view_screens/login_screen.dart';
+import 'package:newledger/view/view_screens/splash_screen.dart';
 import 'package:provider/provider.dart';
 
 void main() async {

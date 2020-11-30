@@ -1,8 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:newledger/view/view_screens/login_screen.dart';
+import 'package:newledger/view/view_screens/splash_screen.dart';
 import 'package:newledger/view/view_screens/transcation_screen.dart';
+import 'package:newledger/view/view_widgets/particular_transcation_card.dart';
+import 'package:newledger/view_models/helper_files.dart';
 
 
 class ParticularUserScreen extends StatefulWidget {
@@ -15,201 +17,17 @@ class ParticularUserScreen extends StatefulWidget {
 }
 
 class _ParticularUserScreenState extends State<ParticularUserScreen> {
-  // int totalDebit = 0;
-  // int totalCredit = 0;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: AppBar(
-        elevation: 0,
-        backgroundColor: Colors.blue,
-        title: Text(
-          "${widget.name}",
-          style: GoogleFonts.muli(
-            letterSpacing: 1.1,
-          ),
-        ),
-      ),
+      appBar:particularUserScreenAppBar(),
       body: SingleChildScrollView(
         child: Column(
           children: [
-            Container(
-              color: Colors.blue,
-              height: MediaQuery.of(context).size.height * .4,
-              child: Padding(
-                padding: EdgeInsets.only(left: 20),
-                child: Column(
-                  children: [
-                    SizedBox(
-                      height: 10,
-                    ),
-                    Row(
-                      children: [
-                        Icon(
-                          Icons.phone,
-                          size: 20,
-                          color: Colors.white,
-                        ),
-                        SizedBox(
-                          width: 10,
-                        ),
-                        mobileStreamBuilder(),
-                      ],
-                    ),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    Row(
-                      children: [
-                        Icon(
-                          Icons.mail_outline,
-                          size: 20,
-                          color: Colors.white,
-                        ),
-                        SizedBox(
-                          width: 10,
-                        ),
-                        eMailStreamBuilder(),
-                      ],
-                    ),
-                    Container(
-                      width: MediaQuery.of(context).size.width * .9,
-                      height: 70,
-                      alignment: Alignment.center,
-                      child: overAllDebitAndCreditAmount(),
-                    ),
-                    Container(
-                      width: MediaQuery.of(context).size.width * .9,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: [
-                          Row(
-                            children: [
-                              Container(
-                                child: Icon(
-                                  Icons.arrow_upward_rounded,
-                                  size: 50,
-                                  color: Colors.green,
-                                ),
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(30),
-                                    border: Border.all(
-                                        color: Colors.green, width: 3)),
-                              ),
-
-                              //StreamBuilder here
-                              SizedBox(
-                                width: 10,
-                              ),
-                              creditStreamBuilder(),
-                            ],
-                          ),
-                          Row(
-                            children: [
-                              Container(
-                                child: Icon(
-                                  Icons.arrow_downward,
-                                  size: 50,
-                                  color: Colors.red,
-                                ),
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(30),
-                                    border: Border.all(
-                                        color: Colors.red, width: 3)),
-                              ),
-                              SizedBox(
-                                width: 10,
-                              ),
-                              debitStreamBuilder(),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            StreamBuilder(
-              stream: allTranscationRef
-                  .doc(google.currentUser.id)
-                  .collection(widget.name)
-                  .snapshots(),
-              builder: (context, snap) {
-                if (!snap.hasData) {
-                  return Center(
-                    child: Text("Wait Data Is Loading"),
-                  );
-                }
-                List<DocumentSnapshot> doc = snap.data.documents;
-                for (DocumentSnapshot d in doc) {
-                  print(d.data());
-                }
-                ;
-                return ListView.builder(
-                    primary: false,
-                    shrinkWrap: true,
-                    itemCount: snap.data.documents.length,
-                    itemBuilder: (context, index) {
-                      IconData iconChange;
-                      Color colorType;
-                      if ("Debit" == doc[index]["type"]) {
-                        iconChange = Icons.arrow_downward;
-                        colorType = Colors.red;
-                      } else {
-                        iconChange = Icons.arrow_upward;
-                        colorType = Colors.green;
-                      }
-                      return Container(
-                        alignment: Alignment.center,
-                        margin:
-                            EdgeInsets.symmetric(horizontal: 30, vertical: 15),
-                        padding: EdgeInsets.symmetric(horizontal: 10),
-                        height: 80,
-                        width: double.infinity,
-                        decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(10),
-                            boxShadow: [
-                              BoxShadow(
-                                blurRadius: 10,
-                                color: Colors.black45,
-                                offset: Offset(
-                                  7.0, // Move to right 10  horizontally
-                                  7.0, // Move to bottom 10 Vertically
-                                ),
-                              )
-                            ]),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              doc[index]["date"],
-                              style: GoogleFonts.muli(),
-                            ),
-                            Row(
-                              children: [
-                                Icon(
-                                  iconChange,
-                                  color: colorType,
-                                ),
-                                SizedBox(
-                                  width: 3,
-                                ),
-                                Text(
-                                  "\$ ${doc[index]["amount"]} Rs",
-                                  style: GoogleFonts.muli(),
-                                ),
-                              ],
-                            )
-                          ],
-                        ),
-                      );
-                    });
-              },
-            )
+            upperBody(),
+            lowerBody(),
           ],
         ),
       ),
@@ -219,7 +37,7 @@ class _ParticularUserScreenState extends State<ParticularUserScreen> {
           Navigator.push(
               context,
               new MaterialPageRoute(
-                  builder: (context) =>  TranscationScreen(name: widget.name)));
+                  builder: (context) => TranscationScreen(name: widget.name)));
         },
         child: Icon(
           Icons.attach_money,
@@ -229,9 +47,60 @@ class _ParticularUserScreenState extends State<ParticularUserScreen> {
     );
   }
 
+  upperBody() {
+    return  Container(
+      color: Colors.blue,
+      height: MediaQuery
+          .of(context)
+          .size
+          .height * .3,
+      child: Padding(
+        padding: EdgeInsets.only(left: 20),
+        child: Column(
+          children: [
+
+            $helperFile.H10(),
+            mobileNumber(),
+            $helperFile.H10(),
+            eMail(),
+            overAllAmount(),
+            debitAndCreditMoney(),
+
+          ],
+        ),
+      ),
+    );
+  }
+  lowerBody() {
+    return   StreamBuilder(
+      stream: allTranscationRef.doc(google.currentUser.id).collection(
+          widget.name).snapshots(),
+      builder: (context, snap) {
+        if (!snap.hasData) {
+          return Center(
+            child: Text("Wait Data Is Loading"),
+          );
+        }
+        List<DocumentSnapshot> doc = snap.data.documents;
+        for (DocumentSnapshot d in doc) {
+          print(d.data());
+        }
+        ;
+        return ListView.builder(
+          primary: false,
+          shrinkWrap: true,
+          itemCount: snap.data.documents.length,
+          itemBuilder: (context, index) {
+            return TranscationCard(doc: doc[index]);
+          },);
+      },
+    );
+  }
+
   debitStreamBuilder() {
     return StreamBuilder(
-      stream:Firestore.instance.collection("UserAccouts").doc(google.currentUser.id).collection("allUsersList").snapshots(),
+      stream: Firestore.instance.collection("UserAccouts").doc(
+          google.currentUser.id).collection("allUsersList").snapshots(),
       builder: (context, snap) {
         if (!snap.hasData) {
           return Text("wait");
@@ -254,7 +123,8 @@ class _ParticularUserScreenState extends State<ParticularUserScreen> {
 
   creditStreamBuilder() {
     return StreamBuilder(
-      stream: Firestore.instance.collection("UserAccouts").doc(google.currentUser.id).collection("allUsersList").snapshots(),
+      stream: Firestore.instance.collection("UserAccouts").doc(
+          google.currentUser.id).collection("allUsersList").snapshots(),
       builder: (context, snap) {
         if (!snap.hasData) {
           return Text("wait");
@@ -277,7 +147,8 @@ class _ParticularUserScreenState extends State<ParticularUserScreen> {
 
   mobileStreamBuilder() {
     return StreamBuilder(
-      stream: Firestore.instance.collection("UserAccouts").doc(google.currentUser.id).collection("allUsersList").snapshots(),
+      stream: Firestore.instance.collection("UserAccouts").doc(
+          google.currentUser.id).collection("allUsersList").snapshots(),
       builder: (context, snap) {
         if (!snap.hasData) {
           return Text("Loading");
@@ -291,7 +162,7 @@ class _ParticularUserScreenState extends State<ParticularUserScreen> {
                   letterSpacing: 1.1, color: Colors.white, fontSize: 12),
             );
           }
-          print(dc.data());
+
         }
         return null;
       },
@@ -300,7 +171,8 @@ class _ParticularUserScreenState extends State<ParticularUserScreen> {
 
   eMailStreamBuilder() {
     return StreamBuilder(
-      stream: Firestore.instance.collection("UserAccouts").doc(google.currentUser.id).collection("allUsersList").snapshots(),
+      stream: Firestore.instance.collection("UserAccouts").doc(
+          google.currentUser.id).collection("allUsersList").snapshots(),
       builder: (context, snap) {
         if (!snap.hasData) {
           return Text("Loading");
@@ -314,7 +186,7 @@ class _ParticularUserScreenState extends State<ParticularUserScreen> {
                   letterSpacing: 1.1, color: Colors.white, fontSize: 11),
             );
           }
-          // print(dc.data());
+
         }
         return null;
       },
@@ -323,7 +195,8 @@ class _ParticularUserScreenState extends State<ParticularUserScreen> {
 
   overAllDebitAndCreditAmount() {
     return StreamBuilder(
-      stream: Firestore.instance.collection("UserAccouts").doc(google.currentUser.id).collection("allUsersList").snapshots(),
+      stream: Firestore.instance.collection("UserAccouts").doc(
+          google.currentUser.id).collection("allUsersList").snapshots(),
       builder: (context, snap) {
         if (!snap.hasData) {
           return Text("Loading");
@@ -334,14 +207,16 @@ class _ParticularUserScreenState extends State<ParticularUserScreen> {
             int total = 0;
             int a = dc["inCredit"];
             int b = dc["inDebit"];
-            int c = a - b;
+
             if (a > b) {
+              int c = a - b;
               return Text(
                 "\$ $c Rs",
                 style: GoogleFonts.muli(
                     letterSpacing: 1, fontSize: 20, color: Colors.green),
               );
             } else {
+              int c = b - a;
               return Text(
                 "\$ $c Rs",
                 style: GoogleFonts.muli(
@@ -352,6 +227,81 @@ class _ParticularUserScreenState extends State<ParticularUserScreen> {
         }
         return null;
       },
+    );
+  }
+
+  particularUserScreenAppBar() {
+    return AppBar(
+      elevation: 0,
+      backgroundColor: Colors.blue,
+      title: Text(
+        "${widget.name}",
+        style: GoogleFonts.muli(
+          letterSpacing: 1.1,
+        ),
+      ),
+    );
+  }
+
+  mobileNumber()
+  {
+    return   Row(
+      children: [
+        Icon(
+          Icons.phone,
+          size: 20,
+          color: Colors.white,
+        ),
+        $helperFile.W10(),
+        mobileStreamBuilder(),
+      ],
+    );
+  }
+
+  overAllAmount() {
+    return Container(
+      width:double.infinity,
+      height: 50,
+      alignment: Alignment.center,
+      child: overAllDebitAndCreditAmount(),
+    );
+  }
+
+  eMail() {
+    return   Row(
+      children: [
+        Icon(
+          Icons.mail_outline,
+          size: 20,
+          color: Colors.white,
+        ),
+        $helperFile.W10(),
+        eMailStreamBuilder(),
+      ],
+    );
+  }
+
+
+  debitAndCreditMoney()
+  {
+    return  Row(
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
+      children: [
+        Row(
+          children: [
+            Icon(Icons.arrow_circle_up,color: Colors.green,size: 70,),
+            $helperFile.W10(),
+            creditStreamBuilder(),
+          ],
+        ),
+        Row(
+          children: [
+            Icon(Icons.arrow_circle_down_rounded,color: Colors.red,size: 70,),
+            $helperFile.W10(),
+            debitStreamBuilder(),
+          ],
+        ),
+      ],
     );
   }
 }
