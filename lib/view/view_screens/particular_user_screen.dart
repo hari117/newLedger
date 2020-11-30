@@ -1,8 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:newledger/login_screen.dart';
-import 'package:newledger/transcation_screen.dart';
+import 'package:newledger/view/view_screens/login_screen.dart';
+import 'package:newledger/view/view_screens/transcation_screen.dart';
 
 
 class ParticularUserScreen extends StatefulWidget {
@@ -335,17 +335,13 @@ class _ParticularUserScreenState extends State<ParticularUserScreen> {
             int a = dc["inCredit"];
             int b = dc["inDebit"];
             int c = a - b;
-            //print("**************************** $a ************************************");
-            //print("**************************** $b ************************************");
             if (a > b) {
-              //print("************************* condition matched 1: **************************");
               return Text(
                 "\$ $c Rs",
                 style: GoogleFonts.muli(
                     letterSpacing: 1, fontSize: 20, color: Colors.green),
               );
             } else {
-              //print("************************* condition matched 2: **************************");
               return Text(
                 "\$ $c Rs",
                 style: GoogleFonts.muli(

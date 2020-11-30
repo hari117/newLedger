@@ -2,17 +2,15 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:newledger/globalState.dart';
-import 'package:newledger/newhome_screen.dart';
+import 'package:newledger/model/globalState.dart';
+import 'package:newledger/view/view_screens/newhome_screen.dart';
+import 'package:newledger/view_models/firebase_activites.dart';
 import 'package:provider/provider.dart';
 
 GoogleSignIn google = GoogleSignIn();
-CollectionReference userAccountRef =
-    Firestore.instance.collection("UserAccouts");
-CollectionReference allTranscationRef =
-    Firestore.instance.collection("Transactions");
-// CollectionReference allUsersListRef =
-//     userAccountRef.doc(google.currentUser.id).collection("allUsersList");
+CollectionReference userAccountRef = Firestore.instance.collection("UserAccouts");
+CollectionReference allTranscationRef = Firestore.instance.collection("Transactions");
+
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -24,6 +22,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   void initState() {
+
     // TODO: implement initState
     super.initState();
     google.onCurrentUserChanged.listen((GoogleSignInAccount account) {
@@ -37,23 +36,22 @@ class _LoginScreenState extends State<LoginScreen> {
   hangleSignIn(GoogleSignInAccount account) {
     if (account != null) {
       checkUsersInFireBase();
-      setState(() {
+
         Provider.of<GlobalState>(context,listen: false).setBool(true);
        // isAuth = true;
-        print(
-            "********************* ${google.currentUser.id}***********************************");
-      });
+
+
     } else {
-      setState(() {
+
         Provider.of<GlobalState>(context,listen: false).setBool(false);
         //isAuth = false;
-      });
+
     }
   }
 
   checkUsersInFireBase() async {
     DocumentSnapshot doc =
-        await userAccountRef.document(google.currentUser.id).get();
+        await FirebaseCenter.userAccountRef.document(google.currentUser.id).get();
     if (!doc.exists) {
       Map<String, dynamic> map = {
         "name": google.currentUser.displayName,

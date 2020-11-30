@@ -1,7 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:newledger/login_screen.dart';
-import 'package:newledger/particular_user_screen.dart';
+import 'package:newledger/view/view_screens/login_screen.dart';
+import 'package:newledger/view/view_screens/particular_user_screen.dart';
+
 
 class CreateUser extends StatefulWidget {
   @override

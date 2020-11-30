@@ -16,5 +16,4 @@ class GlobalState extends ChangeNotifier
      notifyListeners();
    }
 
-
 }

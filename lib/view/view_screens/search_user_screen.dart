@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:newledger/login_screen.dart';
+import 'package:newledger/view/view_screens/login_screen.dart';
 
 class SearchUser extends StatefulWidget {
   Function callback;
@@ -52,7 +52,6 @@ class _SearchUserState extends State<SearchUser> {
                   child: Container(
                     width: MediaQuery.of(context).size.width,
                     height: 100,
-               //     color: Colors.green,
                     padding: EdgeInsets.symmetric(horizontal: 20),
                     margin: EdgeInsets.symmetric(vertical: 10),
                     child: Row(
@@ -84,8 +83,8 @@ class _SearchUserState extends State<SearchUser> {
                     ),
                   ),
                 );
-
-              },);
+                },
+          );
         },
       ),
     );

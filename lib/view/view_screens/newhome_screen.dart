@@ -3,10 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
-import 'package:newledger/add_user_screen.dart';
-import 'package:newledger/login_screen.dart';
-import 'package:newledger/transcation_screen.dart';
-import 'package:newledger/usercard_widget.dart';
+import 'package:newledger/view/view_screens/add_user_screen.dart';
+import 'package:newledger/view/view_screens/login_screen.dart';
+import 'package:newledger/view/view_screens/transcation_screen.dart';
+import 'package:newledger/view/view_widgets/usercard_widget.dart';
+
+
 
 class NewHomeScreen extends StatefulWidget {
   @override
