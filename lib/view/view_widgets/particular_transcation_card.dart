@@ -1,18 +1,15 @@
-
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:newledger/view_models/firebase_activites.dart';
 
 class TranscationCard extends StatefulWidget {
-
   DocumentSnapshot doc;
-  TranscationCard({this.doc});
+  String name;
+  TranscationCard({this.doc,this.name});
 
   @override
   _TranscationCardState createState() => _TranscationCardState();
-
-
 }
 
 class _TranscationCardState extends State<TranscationCard> {
@@ -27,10 +24,9 @@ class _TranscationCardState extends State<TranscationCard> {
       iconChange = Icons.arrow_upward;
       colorType = Colors.green;
     }
-     return Container(
+    return Container(
       alignment: Alignment.center,
-      margin:
-      EdgeInsets.symmetric(horizontal: 30, vertical: 15),
+      margin: EdgeInsets.symmetric(horizontal: 30, vertical: 15),
       padding: EdgeInsets.symmetric(horizontal: 10),
       height: 80,
       width: double.infinity,
@@ -67,6 +63,20 @@ class _TranscationCardState extends State<TranscationCard> {
                 "\$ ${widget.doc["amount"]} Rs",
                 style: GoogleFonts.muli(),
               ),
+              SizedBox(
+                width: 7,
+              ),
+              InkWell(
+                onTap: ()
+                {
+                 print("********* delete funtion is pressed **********");
+                 FirebaseCenter.deleteParticularTranscationList(widget.doc,widget.name);
+                },
+                child: Icon(
+                  Icons.delete,
+                  color: Colors.black45,
+                ),
+              )
             ],
           )
         ],

@@ -42,7 +42,7 @@ class _CreateUserState extends State<CreateUser> {
 
   //Widget Funtions start from here .....
 
-  nameTextBox() {
+  nameTextBox() { 
     return Container(
       padding: EdgeInsets.symmetric(vertical: 15),
       child: TextField(

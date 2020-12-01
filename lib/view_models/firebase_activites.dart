@@ -125,4 +125,61 @@ class FirebaseCenter {
         .doc(accountName)
         .update(map2);
   }
+
+  static deleteParticularTranscationList(
+      DocumentSnapshot doc, String name) async {
+    DocumentSnapshot userDoc = await Firestore.instance
+        .collection("UserAccouts")
+        .doc(google.currentUser.id)
+        .collection("allUsersList")
+        .doc(name)
+        .get();
+    DocumentSnapshot transcationDoc = await Firestore.instance
+        .collection("Transactions")
+        .doc(google.currentUser.id)
+        .collection(name)
+        .doc(doc.id)
+        .get();
+
+    if (doc.exists) {
+      print("document is in firebase");
+      print(doc.id);
+      if ("Credit" == doc["type"]) {
+        print("this is credit transcation");
+        int a = int.parse(doc["amount"]);
+        int b = userDoc["inCredit"];
+        int c = b - a;
+        Map<String, int> map = {"inCredit": c};
+        await Firestore.instance
+            .collection("UserAccouts")
+            .doc(google.currentUser.id)
+            .collection("allUsersList")
+            .doc(name)
+            .update(map);
+        await Firestore.instance
+            .collection("Transactions")
+            .doc(google.currentUser.id)
+            .collection(name)
+            .doc(doc.id)
+            .delete();
+      } else {
+        int a = int.parse(doc["amount"]);
+        int b = userDoc["inDebit"];
+        int c = b - a;
+        Map<String, int> map = {"inDebit": c};
+        await Firestore.instance
+            .collection("UserAccouts")
+            .doc(google.currentUser.id)
+            .collection("allUsersList")
+            .doc(name)
+            .update(map);
+        await Firestore.instance
+            .collection("Transactions")
+            .doc(google.currentUser.id)
+            .collection(name)
+            .doc(doc.id)
+            .delete();
+      }
+    }
+  }
 }

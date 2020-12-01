@@ -15,9 +15,8 @@ class TranscationScreen extends StatefulWidget {
 }
 
 class _TranscationScreenState extends State<TranscationScreen> {
-  TextEditingController accoutNameController = TextEditingController();
-  TextEditingController transcationAmountController = TextEditingController();
-  TextEditingController transcationNote = TextEditingController();
+  TextEditingController _accoutNameController = TextEditingController();
+  TextEditingController _transcationAmountController = TextEditingController();
 
   String dateTime = "";
 
@@ -25,7 +24,7 @@ class _TranscationScreenState extends State<TranscationScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    accoutNameController.text = widget.name;
+    _accoutNameController.text = widget.name;
   }
 
   @override
@@ -63,7 +62,7 @@ class _TranscationScreenState extends State<TranscationScreen> {
 
   // This is Callback funtion to select user
   chooseUser(String name) {
-    accoutNameController.text = name;
+    _accoutNameController.text = name;
   }
   transcationScreenAppBar() {
     return AppBar(
@@ -90,7 +89,7 @@ class _TranscationScreenState extends State<TranscationScreen> {
     return  Container(
       padding: EdgeInsets.symmetric(vertical: 15),
       child: TextField(
-        controller: accoutNameController,
+        controller: _accoutNameController,
         onTap: () {
 
           Navigator.push(
@@ -155,7 +154,7 @@ class _TranscationScreenState extends State<TranscationScreen> {
         color: Colors.red,
         splashColor: Colors.blue,
         onPressed: () async {
-          if (transcationAmountController.text == "" &&
+          if (_transcationAmountController.text == "" &&
               dateTime == "") {
             showDialog(
                 context: context,
@@ -177,13 +176,13 @@ class _TranscationScreenState extends State<TranscationScreen> {
 
 
             FirebaseCenter.debitAmout(
-                transcationAmountController.text,
+                _transcationAmountController.text,
                 dateTime,
-                accoutNameController.text);
+                _accoutNameController.text);
 
-            transcationAmountController.clear();
+            _transcationAmountController.clear();
             dateTime = null;
-            accoutNameController.clear();
+            _accoutNameController.clear();
             Navigator.pop(context);
           }
           print("");
@@ -205,7 +204,7 @@ class _TranscationScreenState extends State<TranscationScreen> {
         color: Colors.green,
         splashColor: Colors.blue,
         onPressed: () async {
-          if (transcationAmountController.text == "" &&
+          if (_transcationAmountController.text == "" &&
               dateTime == "") {
             showDialog(
                 context: context,
@@ -226,11 +225,11 @@ class _TranscationScreenState extends State<TranscationScreen> {
           } else {
 
             FirebaseCenter.creditAmount(
-                transcationAmountController.text,
+                _transcationAmountController.text,
                 dateTime,
-                accoutNameController.text);
-            transcationAmountController.clear();
-            accoutNameController.clear();
+                _accoutNameController.text);
+            _transcationAmountController.clear();
+            _accoutNameController.clear();
             dateTime = null;
             Navigator.pop(context);
           }
@@ -260,7 +259,7 @@ class _TranscationScreenState extends State<TranscationScreen> {
         children: [
           Expanded(
             child: TextField(
-              controller: transcationAmountController,
+              controller: _transcationAmountController,
               keyboardType: TextInputType.number,
               autofocus: false,
               decoration: InputDecoration(

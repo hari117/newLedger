@@ -82,16 +82,12 @@ class _ParticularUserScreenState extends State<ParticularUserScreen> {
           );
         }
         List<DocumentSnapshot> doc = snap.data.documents;
-        for (DocumentSnapshot d in doc) {
-          print(d.data());
-        }
-        ;
         return ListView.builder(
           primary: false,
           shrinkWrap: true,
           itemCount: snap.data.documents.length,
           itemBuilder: (context, index) {
-            return TranscationCard(doc: doc[index]);
+            return TranscationCard(doc: doc[index],name:widget.name);
           },);
       },
     );
