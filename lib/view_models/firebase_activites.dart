@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:newledger/view/view_screens/splash_screen.dart';
+import 'package:newledger/view/view_screens/login_screen.dart';
 
 class FirebaseCenter {
   static CollectionReference userAccountRef =

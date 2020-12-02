@@ -4,11 +4,10 @@ import 'package:google_fonts/google_fonts.dart';
 
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:newledger/view/view_screens/add_user_screen.dart';
-import 'package:newledger/view/view_screens/splash_screen.dart';
+import 'package:newledger/view/view_screens/login_screen.dart';
 import 'package:newledger/view/view_screens/transcation_screen.dart';
 import 'package:newledger/view/view_widgets/usercard_widget.dart';
 import 'package:newledger/view_models/helper_files.dart';
-
 
 class NewHomeScreen extends StatefulWidget {
   @override
@@ -21,7 +20,7 @@ class _NewHomeScreenState extends State<NewHomeScreen> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: homeScreenAppBar(),
-      drawer:homeScreenDrawer(),
+      drawer: homeScreenDrawer(),
       body: SingleChildScrollView(
         child: Column(
           children: [
@@ -33,7 +32,6 @@ class _NewHomeScreenState extends State<NewHomeScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-
                   // all home screen widgets are here
 
                   $helperFile.H15(),
@@ -42,11 +40,9 @@ class _NewHomeScreenState extends State<NewHomeScreen> {
                   debitAndCredit(),
 
                   // end.
-
                 ],
               ),
             ),
-
             StreamBuilder(
               stream: Firestore.instance
                   .collection("UserAccouts")
@@ -73,7 +69,6 @@ class _NewHomeScreenState extends State<NewHomeScreen> {
                 );
               },
             ),
-
           ],
         ),
       ),
@@ -93,19 +88,27 @@ class _NewHomeScreenState extends State<NewHomeScreen> {
   }
 
   debitAndCredit() {
-    return  Row(
+    return Row(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
         Row(
           children: [
-            Icon(Icons.arrow_circle_up,color: Colors.green,size: 60,),
+            Icon(
+              Icons.arrow_upward_rounded,
+              color: Colors.green,
+              size: 50,
+            ),
             $helperFile.W10(),
             totalCreditStream(),
           ],
         ),
         Row(
           children: [
-            Icon(Icons.arrow_circle_down_rounded,color: Colors.red,size: 60,),
+            Icon(
+              Icons.arrow_downward,
+              color: Colors.red,
+              size: 50,
+            ),
             $helperFile.W10(),
             totalDebitStream(),
           ],
@@ -115,7 +118,7 @@ class _NewHomeScreenState extends State<NewHomeScreen> {
   }
 
   speedDailFloatingButton() {
-  return SpeedDial(
+    return SpeedDial(
       child: Icon(Icons.accessibility_rounded),
       children: [
         SpeedDialChild(
@@ -162,10 +165,26 @@ class _NewHomeScreenState extends State<NewHomeScreen> {
           total = total + d["inCredit"];
         }
         //List<DocumentSnapshot
-        return Text(
-          '\$ $total  \nCredit',
-          style: GoogleFonts.muli(
-              color: Colors.white, fontSize: 14, letterSpacing: 1.1),
+        return RichText(
+          text: TextSpan(
+            children: <TextSpan>[
+              TextSpan(
+                text: 'Rs: ',
+                style: GoogleFonts.muli(
+                    color: Colors.white, fontSize: 10, letterSpacing: 1.1),
+              ),
+              TextSpan(
+                text: '$total \n',
+                style: GoogleFonts.muli(
+                    color: total ==0 ?Colors.white :Colors.green, fontSize: 22, letterSpacing: 1.1),
+              ),
+              TextSpan(
+                text: 'Credit',
+                style: GoogleFonts.muli(
+                    color: Colors.white, fontSize: 15, letterSpacing: 1.1),
+              ),
+            ],
+          ),
         );
       },
     );
@@ -188,6 +207,27 @@ class _NewHomeScreenState extends State<NewHomeScreen> {
           total = total + d["inDebit"];
         }
         //List<DocumentSnapshot
+        return RichText(
+          text: TextSpan(
+            children: <TextSpan>[
+              TextSpan(
+                text: 'Rs: ',
+                style: GoogleFonts.muli(
+                    color: Colors.white, fontSize: 10, letterSpacing: 1.1),
+              ),
+              TextSpan(
+                text: '$total \n',
+                style: GoogleFonts.muli(
+                    color: total ==0?Colors.white : Colors.red, fontSize: 22, letterSpacing: 1.1),
+              ),
+              TextSpan(
+                text: 'Debit',
+                style: GoogleFonts.muli(
+                    color: Colors.white, fontSize: 15, letterSpacing: 1.1),
+              ),
+            ],
+          ),
+        );
         return Text(
           '\$ $total  \nDebit',
           style: GoogleFonts.muli(
@@ -222,19 +262,16 @@ class _NewHomeScreenState extends State<NewHomeScreen> {
                 maxRadius: 50,
                 backgroundImage: NetworkImage(google.currentUser.photoUrl),
               ),
-
               $helperFile.H15(),
               Text(
                 google.currentUser.displayName,
                 style: GoogleFonts.muli(fontSize: 22, letterSpacing: 1),
               ),
-
               $helperFile.H15(),
               Text(
                 google.currentUser.email,
                 style: GoogleFonts.muli(fontSize: 14, letterSpacing: 1),
               ),
-
               $helperFile.H30(),
               MaterialButton(
                 onPressed: () {

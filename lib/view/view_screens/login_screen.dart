@@ -4,7 +4,6 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:newledger/model/globalState.dart';
 import 'package:newledger/view/view_screens/newhome_screen.dart';
-import 'package:newledger/view_models/firebase_activites.dart';
 import 'package:newledger/view_models/helper_files.dart';
 import 'package:provider/provider.dart';
 
@@ -20,34 +19,17 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  bool isAuth = false;
+  //bool isAuth = false;
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
 
-    checkGoogleAuth();
+    Provider.of<GlobalState>(context, listen: false).checkGoogleAuth();
   }
 
-  checkGoogleAuth() {
-    google.onCurrentUserChanged.listen((GoogleSignInAccount account) {
-      hangleSignIn(account);
-    });
-    google.signInSilently().then((GoogleSignInAccount account) {
-      hangleSignIn(account);
-    });
-  }
 
-  hangleSignIn(GoogleSignInAccount account) {
-    if (account != null) {
-      FirebaseCenter.checkUsersInFireBase(google.currentUser.id);
-
-      Provider.of<GlobalState>(context, listen: false).setBool(true);
-    } else {
-      Provider.of<GlobalState>(context, listen: false).setBool(false);
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -57,6 +39,9 @@ class _LoginScreenState extends State<LoginScreen> {
       },
     );
   }
+
+
+
 
   loginScreen() {
     return Scaffold(
@@ -89,8 +74,10 @@ class _LoginScreenState extends State<LoginScreen> {
       ),
     );
   }
-
   googleLogin() {
     google.signIn();
   }
+
+
 }
+

@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:newledger/view/view_screens/splash_screen.dart';
+import 'package:newledger/view/view_screens/login_screen.dart';
 import 'package:newledger/view/view_screens/particular_user_screen.dart';
 import 'package:newledger/view_models/firebase_activites.dart';
 

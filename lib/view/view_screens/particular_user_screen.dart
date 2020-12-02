@@ -1,14 +1,15 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:newledger/view/view_screens/splash_screen.dart';
+import 'package:newledger/view/view_screens/login_screen.dart';
 import 'package:newledger/view/view_screens/transcation_screen.dart';
 import 'package:newledger/view/view_widgets/particular_transcation_card.dart';
 import 'package:newledger/view_models/helper_files.dart';
 
-
 class ParticularUserScreen extends StatefulWidget {
   String name;
+
+
 
   ParticularUserScreen({this.name});
 
@@ -18,11 +19,28 @@ class ParticularUserScreen extends StatefulWidget {
 
 class _ParticularUserScreenState extends State<ParticularUserScreen> {
 
+  final scafffoldState = GlobalKey<ScaffoldState>();
+
+  SnackBar s = SnackBar(
+    content: Text("deleted Sucessfully"),
+    backgroundColor: Colors.blue,
+    duration: Duration(seconds: 3),
+  );
+
+  showSnak()
+  {
+    Scaffold.of(context).showSnackBar(
+      SnackBar(
+        content: Text('Have a snack!'),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar:particularUserScreenAppBar(),
+      appBar: particularUserScreenAppBar(),
       body: SingleChildScrollView(
         child: Column(
           children: [
@@ -48,33 +66,31 @@ class _ParticularUserScreenState extends State<ParticularUserScreen> {
   }
 
   upperBody() {
-    return  Container(
+    return Container(
       color: Colors.blue,
-      height: MediaQuery
-          .of(context)
-          .size
-          .height * .3,
+      height: MediaQuery.of(context).size.height * .3,
       child: Padding(
         padding: EdgeInsets.only(left: 20),
         child: Column(
           children: [
-
             $helperFile.H10(),
             mobileNumber(),
             $helperFile.H10(),
             eMail(),
             overAllAmount(),
             debitAndCreditMoney(),
-
           ],
         ),
       ),
     );
   }
+
   lowerBody() {
-    return   StreamBuilder(
-      stream: allTranscationRef.doc(google.currentUser.id).collection(
-          widget.name).snapshots(),
+    return StreamBuilder(
+      stream: allTranscationRef
+          .doc(google.currentUser.id)
+          .collection(widget.name)
+          .snapshots(),
       builder: (context, snap) {
         if (!snap.hasData) {
           return Center(
@@ -87,16 +103,20 @@ class _ParticularUserScreenState extends State<ParticularUserScreen> {
           shrinkWrap: true,
           itemCount: snap.data.documents.length,
           itemBuilder: (context, index) {
-            return TranscationCard(doc: doc[index],name:widget.name);
-          },);
+            return TranscationCard(doc: doc[index], name: widget.name,callback:showSnak);
+          },
+        );
       },
     );
   }
 
   debitStreamBuilder() {
     return StreamBuilder(
-      stream: Firestore.instance.collection("UserAccouts").doc(
-          google.currentUser.id).collection("allUsersList").snapshots(),
+      stream: Firestore.instance
+          .collection("UserAccouts")
+          .doc(google.currentUser.id)
+          .collection("allUsersList")
+          .snapshots(),
       builder: (context, snap) {
         if (!snap.hasData) {
           return Text("wait");
@@ -119,8 +139,11 @@ class _ParticularUserScreenState extends State<ParticularUserScreen> {
 
   creditStreamBuilder() {
     return StreamBuilder(
-      stream: Firestore.instance.collection("UserAccouts").doc(
-          google.currentUser.id).collection("allUsersList").snapshots(),
+      stream: Firestore.instance
+          .collection("UserAccouts")
+          .doc(google.currentUser.id)
+          .collection("allUsersList")
+          .snapshots(),
       builder: (context, snap) {
         if (!snap.hasData) {
           return Text("wait");
@@ -143,8 +166,11 @@ class _ParticularUserScreenState extends State<ParticularUserScreen> {
 
   mobileStreamBuilder() {
     return StreamBuilder(
-      stream: Firestore.instance.collection("UserAccouts").doc(
-          google.currentUser.id).collection("allUsersList").snapshots(),
+      stream: Firestore.instance
+          .collection("UserAccouts")
+          .doc(google.currentUser.id)
+          .collection("allUsersList")
+          .snapshots(),
       builder: (context, snap) {
         if (!snap.hasData) {
           return Text("Loading");
@@ -158,7 +184,6 @@ class _ParticularUserScreenState extends State<ParticularUserScreen> {
                   letterSpacing: 1.1, color: Colors.white, fontSize: 12),
             );
           }
-
         }
         return null;
       },
@@ -167,8 +192,11 @@ class _ParticularUserScreenState extends State<ParticularUserScreen> {
 
   eMailStreamBuilder() {
     return StreamBuilder(
-      stream: Firestore.instance.collection("UserAccouts").doc(
-          google.currentUser.id).collection("allUsersList").snapshots(),
+      stream: Firestore.instance
+          .collection("UserAccouts")
+          .doc(google.currentUser.id)
+          .collection("allUsersList")
+          .snapshots(),
       builder: (context, snap) {
         if (!snap.hasData) {
           return Text("Loading");
@@ -182,7 +210,6 @@ class _ParticularUserScreenState extends State<ParticularUserScreen> {
                   letterSpacing: 1.1, color: Colors.white, fontSize: 11),
             );
           }
-
         }
         return null;
       },
@@ -191,8 +218,11 @@ class _ParticularUserScreenState extends State<ParticularUserScreen> {
 
   overAllDebitAndCreditAmount() {
     return StreamBuilder(
-      stream: Firestore.instance.collection("UserAccouts").doc(
-          google.currentUser.id).collection("allUsersList").snapshots(),
+      stream: Firestore.instance
+          .collection("UserAccouts")
+          .doc(google.currentUser.id)
+          .collection("allUsersList")
+          .snapshots(),
       builder: (context, snap) {
         if (!snap.hasData) {
           return Text("Loading");
@@ -239,9 +269,8 @@ class _ParticularUserScreenState extends State<ParticularUserScreen> {
     );
   }
 
-  mobileNumber()
-  {
-    return   Row(
+  mobileNumber() {
+    return Row(
       children: [
         Icon(
           Icons.phone,
@@ -256,7 +285,7 @@ class _ParticularUserScreenState extends State<ParticularUserScreen> {
 
   overAllAmount() {
     return Container(
-      width:double.infinity,
+      width: double.infinity,
       height: 50,
       alignment: Alignment.center,
       child: overAllDebitAndCreditAmount(),
@@ -264,7 +293,7 @@ class _ParticularUserScreenState extends State<ParticularUserScreen> {
   }
 
   eMail() {
-    return   Row(
+    return Row(
       children: [
         Icon(
           Icons.mail_outline,
@@ -277,22 +306,28 @@ class _ParticularUserScreenState extends State<ParticularUserScreen> {
     );
   }
 
-
-  debitAndCreditMoney()
-  {
-    return  Row(
+  debitAndCreditMoney() {
+    return Row(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
         Row(
           children: [
-            Icon(Icons.arrow_circle_up,color: Colors.green,size: 70,),
+            Icon(
+              Icons.arrow_circle_up,
+              color: Colors.green,
+              size: 70,
+            ),
             $helperFile.W10(),
             creditStreamBuilder(),
           ],
         ),
         Row(
           children: [
-            Icon(Icons.arrow_circle_down_rounded,color: Colors.red,size: 70,),
+            Icon(
+              Icons.arrow_circle_down_rounded,
+              color: Colors.red,
+              size: 70,
+            ),
             $helperFile.W10(),
             debitStreamBuilder(),
           ],

@@ -6,7 +6,8 @@ import 'package:newledger/view_models/firebase_activites.dart';
 class TranscationCard extends StatefulWidget {
   DocumentSnapshot doc;
   String name;
-  TranscationCard({this.doc,this.name});
+  Function callback;
+  TranscationCard({this.doc,this.name,this.callback});
 
   @override
   _TranscationCardState createState() => _TranscationCardState();
@@ -71,6 +72,7 @@ class _TranscationCardState extends State<TranscationCard> {
                 {
                  print("********* delete funtion is pressed **********");
                  FirebaseCenter.deleteParticularTranscationList(widget.doc,widget.name);
+                 widget.callback();
                 },
                 child: Icon(
                   Icons.delete,

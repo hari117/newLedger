@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:newledger/view/view_screens/search_user_screen.dart';
@@ -18,7 +19,7 @@ class _TranscationScreenState extends State<TranscationScreen> {
   TextEditingController _accoutNameController = TextEditingController();
   TextEditingController _transcationAmountController = TextEditingController();
 
-  String dateTime = "";
+  String dateTime =DateFormat('yyyy-MM-dd').format(DateTime.now()).toString();
 
   @override
   void initState() {
@@ -259,6 +260,7 @@ class _TranscationScreenState extends State<TranscationScreen> {
         children: [
           Expanded(
             child: TextField(
+              inputFormatters: [FilteringTextInputFormatter.digitsOnly],
               controller: _transcationAmountController,
               keyboardType: TextInputType.number,
               autofocus: false,
@@ -283,8 +285,7 @@ class _TranscationScreenState extends State<TranscationScreen> {
           MaterialButton(
               height: 57,
               color: Colors.blue,
-              child: Text(
-                dateTime == "" ? "Date" : dateTime.toString(),
+              child: Text(dateTime,
                 style: GoogleFonts.muli(color: Colors.white),
               ),
               onPressed: () {
