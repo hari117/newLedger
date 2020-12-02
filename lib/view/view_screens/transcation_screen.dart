@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
+import 'package:newledger/model/globalState.dart';
 import 'package:newledger/view/view_screens/search_user_screen.dart';
 import 'package:newledger/view_models/firebase_activites.dart';
 import 'package:newledger/view_models/helper_files.dart';
@@ -19,7 +20,10 @@ class _TranscationScreenState extends State<TranscationScreen> {
   TextEditingController _accoutNameController = TextEditingController();
   TextEditingController _transcationAmountController = TextEditingController();
 
-  String dateTime =DateFormat('yyyy-MM-dd').format(DateTime.now()).toString();
+  String dateTime = DateFormat('yyyy-MM-dd').format(DateTime.now()).toString();
+
+  final amountKey = GlobalKey<FormFieldState>();
+  final nameKey = GlobalKey<FormFieldState>();
 
   @override
   void initState() {
@@ -52,7 +56,6 @@ class _TranscationScreenState extends State<TranscationScreen> {
               ),
               $helperFile.H5(),
               transactionAmountTextBox(),
-
             ],
           ),
         ),
@@ -65,6 +68,7 @@ class _TranscationScreenState extends State<TranscationScreen> {
   chooseUser(String name) {
     _accoutNameController.text = name;
   }
+
   transcationScreenAppBar() {
     return AppBar(
       backgroundColor: Colors.white,
@@ -86,23 +90,29 @@ class _TranscationScreenState extends State<TranscationScreen> {
       ),
     );
   }
+
   accountNameTextBox() {
-    return  Container(
+    return Container(
       padding: EdgeInsets.symmetric(vertical: 15),
-      child: TextField(
+      key: nameKey,
+      child: TextFormField(
+        validator: (value) {
+          if (value.length == 0 || value == null) {
+            return "You Must Choose Name";
+          }
+        },
         controller: _accoutNameController,
         onTap: () {
-
           Navigator.push(
-              context,
-              new MaterialPageRoute(
-                  builder: (context) => SearchUser(
-                    callback: chooseUser,
-                  )));
+            context,
+            new MaterialPageRoute(
+              builder: (context) => SearchUser(
+                callback: chooseUser,
+              ),
+            ),
+          );
         },
         readOnly: true,
-
-        autofocus: false,
         decoration: InputDecoration(
           hintText: "Accout",
           border: OutlineInputBorder(
@@ -122,8 +132,9 @@ class _TranscationScreenState extends State<TranscationScreen> {
       ),
     );
   }
+
   bottomBar() {
-    return  Container(
+    return Container(
       width: double.infinity,
       height: 80,
       alignment: Alignment.center,
@@ -148,15 +159,17 @@ class _TranscationScreenState extends State<TranscationScreen> {
       ]),
     );
   }
+
   debitButton() {
-    return  Expanded(
+    return Expanded(
       child: MaterialButton(
         height: 50,
         color: Colors.red,
         splashColor: Colors.blue,
         onPressed: () async {
-          if (_transcationAmountController.text == "" &&
-              dateTime == "") {
+          if (_accoutNameController.text == null ||
+              _accoutNameController.text == "" ||
+              _transcationAmountController.text == null || _transcationAmountController.text == "") {
             showDialog(
                 context: context,
                 builder: (context) {
@@ -173,13 +186,9 @@ class _TranscationScreenState extends State<TranscationScreen> {
                     ],
                   );
                 });
-          } else {
-
-
-            FirebaseCenter.debitAmout(
-                _transcationAmountController.text,
-                dateTime,
-                _accoutNameController.text);
+          }  else {
+            FirebaseCenter.debitAmout(_transcationAmountController.text,
+                dateTime, _accoutNameController.text);
 
             _transcationAmountController.clear();
             dateTime = null;
@@ -191,13 +200,12 @@ class _TranscationScreenState extends State<TranscationScreen> {
         child: Text(
           "Debit",
           style: GoogleFonts.muli(
-              fontSize: 18,
-              letterSpacing: 1.2,
-              fontWeight: FontWeight.w500),
+              fontSize: 18, letterSpacing: 1.2, fontWeight: FontWeight.w500),
         ),
       ),
     );
   }
+
   creditButton() {
     return Expanded(
       child: MaterialButton(
@@ -205,8 +213,9 @@ class _TranscationScreenState extends State<TranscationScreen> {
         color: Colors.green,
         splashColor: Colors.blue,
         onPressed: () async {
-          if (_transcationAmountController.text == "" &&
-              dateTime == "") {
+          if (_accoutNameController.text == null ||
+              _accoutNameController.text == "" ||
+                  _transcationAmountController.text == null || _transcationAmountController.text == "") {
             showDialog(
                 context: context,
                 builder: (context) {
@@ -224,29 +233,29 @@ class _TranscationScreenState extends State<TranscationScreen> {
                   );
                 });
           } else {
-
-            FirebaseCenter.creditAmount(
-                _transcationAmountController.text,
-                dateTime,
-                _accoutNameController.text);
-            _transcationAmountController.clear();
-            _accoutNameController.clear();
-            dateTime = null;
-            Navigator.pop(context);
+            print("all data are corret");
+              FirebaseCenter.creditAmount(
+                  _transcationAmountController.text,
+                  dateTime,
+                  _accoutNameController.text);
+              _transcationAmountController.clear();
+              _accoutNameController.clear();
+              dateTime = null;
+              Navigator.pop(context);
           }
+
         },
         child: Text(
           "Credit",
           style: GoogleFonts.muli(
-              fontSize: 18,
-              letterSpacing: 1.2,
-              fontWeight: FontWeight.w500),
+              fontSize: 18, letterSpacing: 1.2, fontWeight: FontWeight.w500),
         ),
       ),
     );
   }
+
   transactionAmountTextBox() {
-    return    Container(
+    return Container(
       alignment: Alignment.center,
       margin: EdgeInsets.symmetric(vertical: 10),
       padding: EdgeInsets.symmetric(horizontal: 2),
@@ -259,7 +268,13 @@ class _TranscationScreenState extends State<TranscationScreen> {
       child: Row(
         children: [
           Expanded(
-            child: TextField(
+            child: TextFormField(
+              key: amountKey,
+              validator: (value) {
+                if (value == null) {
+                  return "enter ammount";
+                }
+              },
               inputFormatters: [FilteringTextInputFormatter.digitsOnly],
               controller: _transcationAmountController,
               keyboardType: TextInputType.number,
@@ -285,7 +300,8 @@ class _TranscationScreenState extends State<TranscationScreen> {
           MaterialButton(
               height: 57,
               color: Colors.blue,
-              child: Text(dateTime,
+              child: Text(
+                dateTime,
                 style: GoogleFonts.muli(color: Colors.white),
               ),
               onPressed: () {
@@ -296,11 +312,7 @@ class _TranscationScreenState extends State<TranscationScreen> {
                   firstDate: DateTime(1950),
                   lastDate: DateTime(2050),
                 ).then((date) {
-                  dateTime = DateFormat('yyyy-MM-dd')
-                      .format(date)
-                      .toString();
-                  FocusScope.of(context)
-                      .requestFocus(new FocusNode());
+                  dateTime = DateFormat('yyyy-MM-dd').format(date).toString();
                   setState(() {});
                 });
               })
@@ -308,22 +320,20 @@ class _TranscationScreenState extends State<TranscationScreen> {
       ),
     );
   }
+
   accountNameText() {
-    return  Text(
+    return Text(
       "Account Name",
       style: GoogleFonts.muli(
-          fontSize: 18,
-          fontWeight: FontWeight.w900,
-          letterSpacing: 1.2),
+          fontSize: 18, fontWeight: FontWeight.w900, letterSpacing: 1.2),
     );
   }
+
   transcationNameText() {
     return Text(
       "Transcation ",
       style: GoogleFonts.muli(
-          fontSize: 18,
-          fontWeight: FontWeight.w900,
-          letterSpacing: 1.2),
+          fontSize: 18, fontWeight: FontWeight.w900, letterSpacing: 1.2),
     );
   }
 }

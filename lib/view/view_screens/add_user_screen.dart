@@ -23,6 +23,7 @@ class _CreateUserState extends State<CreateUser> {
   final nameKey = GlobalKey<FormFieldState>();
   final numberKey = GlobalKey<FormFieldState>();
   final eMailKey = GlobalKey<FormFieldState>();
+  final mainKey = GlobalKey<FormState>();
 
   @override
   void dispose() {
@@ -41,16 +42,19 @@ class _CreateUserState extends State<CreateUser> {
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20),
         child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              pageText(),
-              $helperFile.H40(),
-              nameTextBox(),
-              mobileNumberTextBox(),
-              emailTextBox(),
-              addButton(),
-            ],
+          child: Form(
+            key: mainKey,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                pageText(),
+                $helperFile.H40(),
+                nameTextBox(),
+                mobileNumberTextBox(),
+                emailTextBox(),
+                addButton(),
+              ],
+            ),
           ),
         ),
       ),
@@ -107,15 +111,16 @@ class _CreateUserState extends State<CreateUser> {
         validator: (value) {
           if (value.length == 10) {
             _mobileNumberController.text = value;
+          } else if (value.length < 10) {
+            return "Enter 10 digits mobile numbers";
           } else {
-            return "Enter Correct Number";
+            return "mobile number mush 10 digits";
           }
         },
         keyboardType: TextInputType.phone,
         inputFormatters: [FilteringTextInputFormatter.digitsOnly],
         textInputAction: TextInputAction.next,
         focusNode: numberFocusNode,
-
         controller: _mobileNumberController,
         autofocus: false,
         decoration: InputDecoration(
@@ -189,9 +194,11 @@ class _CreateUserState extends State<CreateUser> {
         ),
         height: 50,
         onPressed: () async {
-          if (numberKey.currentState.isValid &&
-              nameKey.currentState.isValid &&
-              eMailKey.currentState.isValid) {
+          if (mainKey.currentState.validate())
+          // if (numberKey.currentState.isValid &&
+          //     nameKey.currentState.isValid &&
+          //     eMailKey.currentState.isValid)
+          {
             FirebaseCenter.addParticularUser(_eMailController.text, 0, 0,
                 _mobileNumberController.text, _nameController.text);
             String name = _nameController.text;

@@ -103,7 +103,7 @@ class _ParticularUserScreenState extends State<ParticularUserScreen> {
           shrinkWrap: true,
           itemCount: snap.data.documents.length,
           itemBuilder: (context, index) {
-            return TranscationCard(doc: doc[index], name: widget.name,callback:showSnak);
+            return TranscationCard(doc: doc[index], name: widget.name,);
           },
         );
       },
