@@ -1,11 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-
+import 'package:loading_indicator/loading_indicator.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
+import 'package:newledger/model/apptheam/leader_theam.dart';
 import 'package:newledger/view/view_screens/add_user_screen.dart';
 import 'package:newledger/view/view_screens/login_screen.dart';
 import 'package:newledger/view/view_screens/transcation_screen.dart';
+import 'package:newledger/view/view_widgets/text_widget.dart';
 import 'package:newledger/view/view_widgets/usercard_widget.dart';
 import 'package:newledger/view_models/helper_files.dart';
 
@@ -19,56 +21,43 @@ class _NewHomeScreenState extends State<NewHomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: homeScreenAppBar(),
+      // appBar: homeScreenAppBar(),
       drawer: homeScreenDrawer(),
       body: SingleChildScrollView(
-        child: Column(
+        child: Stack(
           children: [
             Container(
-              height: MediaQuery.of(context).size.height * .2,
-              color: Colors.blue,
+              color: $appTheam.primaryColor_01,
               alignment: Alignment.center,
               padding: EdgeInsets.symmetric(horizontal: 20),
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   // all home screen widgets are here
-
-                  $helperFile.H15(),
-                  accountName(),
-                  $helperFile.H20(),
+                  $helperFile.H50(),
+                  welcomeQuoteAndLogOut(),
+                  $helperFile.H10(),
+                  CustomText(
+                    name: google.currentUser.displayName[0].toUpperCase() +
+                        google.currentUser.displayName.substring(1),
+                    textColor: $appTheam.onWhite_01,
+                    textSize: 14,
+                    textLetterSpacing: 1.3,
+                  ),
+                  $helperFile.H25(),
                   debitAndCredit(),
+                  $helperFile.H20(),
+                  $helperFile.H20(),
+                  $helperFile.H20(),
 
                   // end.
                 ],
               ),
             ),
-            StreamBuilder(
-              stream: Firestore.instance
-                  .collection("UserAccouts")
-                  .doc(google.currentUser.id)
-                  .collection("allUsersList")
-                  .snapshots(),
-              builder: (context, snap) {
-                if (!snap.hasData) {
-                  return Center(
-                    child: Text("Wait Data is Loading"),
-                  );
-                }
-                List<DocumentSnapshot> doc = snap.data.documents;
-                return ListView.builder(
-                  primary: false,
-                  shrinkWrap: true,
-                  itemCount: snap.data.documents.length,
-                  itemBuilder: (context, index) {
-                    String userName = doc[index]["name"];
-                    return UserCard(
-                      userName: userName,
-                    );
-                  },
-                );
-              },
-            ),
+            Container(
+              margin: EdgeInsets.only(top: 210),
+              child: lowerPart(),
+            )
           ],
         ),
       ),
@@ -76,42 +65,177 @@ class _NewHomeScreenState extends State<NewHomeScreen> {
     );
   }
 
-  accountName() {
-    return Text(
-      google.currentUser.displayName,
-      style: GoogleFonts.muli(
-          letterSpacing: 1.1,
-          fontWeight: FontWeight.w500,
-          color: Colors.white,
-          fontSize: 18),
+
+  welcomeQuoteAndLogOut()
+  {
+
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        CustomText(
+          name: "Welcome Back,",
+          textColor: $appTheam.onWhite_01,
+          textSize: 24,
+          textLetterSpacing: 1.1,
+        ),
+        InkWell(
+          onTap: () {
+            logOutDialogBox(context);
+      /*      showDialog(
+                barrierColor: $appTheam.onWhite_01,
+                context: context,
+                barrierDismissible: true,
+                builder: (BuildContext context) {
+                  return Dialog(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(5.0),
+                    ), //this right here
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: $appTheam.primaryColor_01,
+                        borderRadius: BorderRadius.circular(5),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 15),
+                        child: Column(
+                          mainAxisAlignment:
+                          MainAxisAlignment.center,
+                          crossAxisAlignment:
+                          CrossAxisAlignment.center,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            $helperFile.H15(),
+                            Container(
+                              height: 70,
+                              width: 70,
+                              decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  image: DecorationImage(
+                                    image: NetworkImage(google
+                                        .currentUser.photoUrl),
+                                  )),
+                            ),
+                            $helperFile.H10(),
+                            Text(
+                              "Are You Sure,\nYou Want To Logout?",
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                  letterSpacing: 1.3,
+                                  height: 1.2,
+                                  color: $appTheam.onWhite_01,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 15),
+                            ),
+                            $helperFile.H5(),
+                            FlatButton(
+                              minWidth: 150,
+                              height: 35,
+                              onPressed: () {
+                                google.signOut();
+                                Navigator.pop(context);
+                              },
+                              child: CustomText(
+                                name: "Logout",
+                                textSize: 18,
+                                textColor: Colors.red,
+                              ),
+                              color: $appTheam.primaryColor_02,
+                            ),
+                            FlatButton(
+                              minWidth: 150,
+                              height: 35,
+                              onPressed: () {
+                                Navigator.pop(context);
+                              },
+                              child: CustomText(
+                                name: "Cancel",
+                                textSize: 18,
+                                textColor: Colors.green,
+                              ),
+                              color: $appTheam.primaryColor_02,
+                            ),
+                            $helperFile.H15(),
+
+                          ],
+                        ),
+                      ),
+                    ),
+                  );
+                });*/
+          },
+          child: Container(
+            width: 42,
+            height: 42,
+            decoration: BoxDecoration(
+                image: DecorationImage(
+                  image:
+                  NetworkImage(google.currentUser.photoUrl),
+                ),
+                color: Colors.blue,
+                shape: BoxShape.circle),
+          ),
+        )
+      ],
     );
   }
 
+
   debitAndCredit() {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
-        Row(
-          children: [
-            Icon(
-              Icons.arrow_upward_rounded,
-              color: Colors.green,
-              size: 50,
+        Flexible(
+          child: Container(
+
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(5),
+              boxShadow: [
+                BoxShadow(color: $appTheam.primaryColor_02),
+              ],
             ),
-            $helperFile.W10(),
-            totalCreditStream(),
-          ],
+            padding: EdgeInsets.only(left: 10),
+            alignment: Alignment.centerLeft,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                $helperFile.H10(),
+                totalCreditStream(),
+                $helperFile.H10(),
+                CustomText(
+                  name: "CREDIT",
+                  textLetterSpacing: 1.1,
+                  textSize: 8,
+                  textColor: Colors.green,
+                ),
+                $helperFile.H10(),
+              ],
+            ),
+          ),
         ),
-        Row(
-          children: [
-            Icon(
-              Icons.arrow_downward,
-              color: Colors.red,
-              size: 50,
+        $helperFile.W20(),
+        Flexible(
+          child: Container(
+            padding: EdgeInsets.only(left: 10),
+            alignment: Alignment.centerLeft,
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(5),
+                boxShadow: [BoxShadow(color: $appTheam.primaryColor_02)]),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                $helperFile.H10(),
+                totalDebitStream(),
+                $helperFile.H10(),
+                CustomText(
+                  name: "DEBIT",
+                  textLetterSpacing: 1.1,
+                  textSize: 8,
+                  textColor: Colors.red,
+                ),
+                $helperFile.H10(),
+              ],
             ),
-            $helperFile.W10(),
-            totalDebitStream(),
-          ],
+          ),
         ),
       ],
     );
@@ -119,19 +243,30 @@ class _NewHomeScreenState extends State<NewHomeScreen> {
 
   speedDailFloatingButton() {
     return SpeedDial(
-      child: Icon(Icons.accessibility_rounded),
+      elevation: .1,
+      backgroundColor: $appTheam.primaryColor_02,
+      child: Icon(
+        Icons.layers_sharp,
+        color: $appTheam.onWhite_01,
+      ),
       children: [
         SpeedDialChild(
-            child: Icon(Icons.add),
+            child: Icon(
+              Icons.add,
+              color: $appTheam.primaryColor_02,
+            ),
             label: "Add User",
-            backgroundColor: Colors.blue,
+            backgroundColor: $appTheam.onWhite_01,
             onTap: () {
               Navigator.push(context,
                   new MaterialPageRoute(builder: (context) => CreateUser()));
             }),
         SpeedDialChild(
-          backgroundColor: Colors.blue,
-          child: Icon(Icons.monetization_on),
+          backgroundColor: $appTheam.onWhite_01,
+          child: Icon(
+            Icons.monetization_on,
+            color: $appTheam.primaryColor_02,
+          ),
           label: "Transcation",
           onTap: () {
             Navigator.push(
@@ -169,19 +304,16 @@ class _NewHomeScreenState extends State<NewHomeScreen> {
           text: TextSpan(
             children: <TextSpan>[
               TextSpan(
-                text: 'Rs: ',
+                text: '₹ ',
                 style: GoogleFonts.muli(
-                    color: Colors.white, fontSize: 10, letterSpacing: 1.1),
+                    color: Colors.green, fontSize: 14, letterSpacing: 1.1),
               ),
               TextSpan(
-                text: '$total \n',
+                text: '$total',
                 style: GoogleFonts.muli(
-                    color: total ==0 ?Colors.white :Colors.green, fontSize: 22, letterSpacing: 1.1),
-              ),
-              TextSpan(
-                text: 'Credit',
-                style: GoogleFonts.muli(
-                    color: Colors.white, fontSize: 15, letterSpacing: 1.1),
+                    color: total == 0 ? Colors.white : Colors.green,
+                    fontSize: 22,
+                    letterSpacing: 1.1),
               ),
             ],
           ),
@@ -211,27 +343,19 @@ class _NewHomeScreenState extends State<NewHomeScreen> {
           text: TextSpan(
             children: <TextSpan>[
               TextSpan(
-                text: 'Rs: ',
+                text: '₹ ',
                 style: GoogleFonts.muli(
-                    color: Colors.white, fontSize: 10, letterSpacing: 1.1),
+                    color:  Colors.red, fontSize: 14, letterSpacing: 1.1),
               ),
               TextSpan(
-                text: '$total \n',
+                text: '$total',
                 style: GoogleFonts.muli(
-                    color: total ==0?Colors.white : Colors.red, fontSize: 22, letterSpacing: 1.1),
-              ),
-              TextSpan(
-                text: 'Debit',
-                style: GoogleFonts.muli(
-                    color: Colors.white, fontSize: 15, letterSpacing: 1.1),
+                    color: total == 0 ? Colors.white : Colors.red,
+                    fontSize: 22,
+                    letterSpacing: 1.1),
               ),
             ],
           ),
-        );
-        return Text(
-          '\$ $total  \nDebit',
-          style: GoogleFonts.muli(
-              color: Colors.white, fontSize: 14, letterSpacing: 1.1),
         );
       },
     );
@@ -292,4 +416,149 @@ class _NewHomeScreenState extends State<NewHomeScreen> {
       ),
     );
   }
+
+
+
+  lowerPart() {
+    return StreamBuilder(
+      stream: Firestore.instance
+          .collection("UserAccouts")
+          .doc(google.currentUser.id)
+          .collection("allUsersList")
+          .snapshots(),
+      builder: (context, snap) {
+        if (!snap.hasData) {
+          return Container(
+            width: double.infinity,
+            height: 400,
+            alignment: Alignment.center,
+            child: SizedBox(
+              width: 100,
+              height: 100,
+              child: LoadingIndicator(
+                indicatorType: Indicator.ballClipRotatePulse,
+                color:$appTheam.primaryColor_02,
+              ),
+            ),
+          );
+        }
+        List<DocumentSnapshot> doc = snap.data.documents;
+        if (doc.isEmpty) {
+          return Container(
+              width: double.infinity,
+              height: 400,
+              alignment: Alignment.center,
+              child: Text(
+                " Currerntly There is No Transcations",
+                style: GoogleFonts.roboto(
+                    color: Colors.red, fontSize: 15, letterSpacing: 1.2),
+              ));
+        }
+        return ListView.builder(
+          primary: false,
+          shrinkWrap: true,
+          itemCount: snap.data.documents.length,
+          itemBuilder: (context, index) {
+            String userName = doc[index]["name"];
+            return UserCard(
+              userName: userName,
+            );
+          },
+        );
+      },
+    );
+  }
+
+
+
+
+  logOutDialogBox(context)
+  {
+    showDialog(
+        barrierColor: $appTheam.onWhite_01,
+        context: context,
+        barrierDismissible: true,
+        builder: (BuildContext context) {
+          return Dialog(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(5.0),
+            ), //this right here
+            child: Container(
+              decoration: BoxDecoration(
+                color: $appTheam.primaryColor_01,
+                borderRadius: BorderRadius.circular(5),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(
+                    horizontal: 15),
+                child: Column(
+                  mainAxisAlignment:
+                  MainAxisAlignment.center,
+                  crossAxisAlignment:
+                  CrossAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    $helperFile.H15(),
+                    Container(
+                      height: 70,
+                      width: 70,
+                      decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          image: DecorationImage(
+                            image: NetworkImage(google
+                                .currentUser.photoUrl),
+                          )),
+                    ),
+                    $helperFile.H10(),
+                    Text(
+                      "Are You Sure,\nYou Want To Logout?",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                          letterSpacing: 1.3,
+                          height: 1.2,
+                          color: $appTheam.onWhite_01,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 15),
+                    ),
+                    $helperFile.H5(),
+                    FlatButton(
+                      minWidth: 150,
+                      height: 35,
+                      onPressed: () {
+                        google.signOut();
+                        Navigator.pop(context);
+                      },
+                      child: CustomText(
+                        name: "Logout",
+                        textSize: 18,
+                        textColor: Colors.red,
+                      ),
+                      color: $appTheam.primaryColor_02,
+                    ),
+                    FlatButton(
+                      minWidth: 150,
+                      height: 35,
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      child: CustomText(
+                        name: "Cancel",
+                        textSize: 18,
+                        textColor: Colors.green,
+                      ),
+                      color: $appTheam.primaryColor_02,
+                    ),
+                    $helperFile.H15(),
+
+                  ],
+                ),
+              ),
+            ),
+          );
+        });
+  }
+
+
+
+
 }

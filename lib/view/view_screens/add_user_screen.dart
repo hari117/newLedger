@@ -1,8 +1,8 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:newledger/view/view_screens/login_screen.dart';
+import 'package:newledger/model/apptheam/leader_theam.dart';
 import 'package:newledger/view/view_screens/particular_user_screen.dart';
+import 'package:newledger/view/view_widgets/text_widget.dart';
 import 'package:newledger/view_models/firebase_activites.dart';
 import 'package:newledger/view_models/helper_files.dart';
 import 'package:email_validator/email_validator.dart';
@@ -41,19 +41,43 @@ class _CreateUserState extends State<CreateUser> {
       appBar: addUserAppBar(),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20),
-        child: SingleChildScrollView(
-          child: Form(
-            key: mainKey,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                pageText(),
-                $helperFile.H40(),
-                nameTextBox(),
-                mobileNumberTextBox(),
-                emailTextBox(),
-                addButton(),
-              ],
+        child: Center(
+          child: SingleChildScrollView(
+            child: Form(
+              key: mainKey,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  CustomText(
+                    name: "User Name",
+                    textLetterSpacing: 1.2,
+                    textFontWeigth: FontWeight.normal,
+                    textColor: $appTheam.primaryColor_02,
+                    textSize: 14,
+                  ),
+                  nameTextBox(),
+                  $helperFile.H15(),
+                  CustomText(
+                    name: "Mobile Number",
+                    textLetterSpacing: 1.2,
+                    textFontWeigth: FontWeight.normal,
+                    textColor: $appTheam.primaryColor_02,
+                    textSize: 14,
+                  ),
+                  mobileNumberTextBox(),
+                  $helperFile.H15(),
+                  CustomText(
+                    name: "E-Mail",
+                    textLetterSpacing: 1.2,
+                    textFontWeigth: FontWeight.normal,
+                    textColor: $appTheam.primaryColor_02,
+                    textSize: 14,
+                  ),
+                  emailTextBox(),
+                  $helperFile.H15(),
+                  addButton(),
+                ],
+              ),
             ),
           ),
         ),
@@ -65,6 +89,8 @@ class _CreateUserState extends State<CreateUser> {
     return Container(
       padding: EdgeInsets.symmetric(vertical: 15),
       child: TextFormField(
+        textCapitalization: TextCapitalization.words,
+        cursorColor: $appTheam.primaryColor_01,
         key: nameKey,
         keyboardType: TextInputType.name,
         focusNode: nameFoucusNode,
@@ -80,16 +106,24 @@ class _CreateUserState extends State<CreateUser> {
         autofocus: true,
         decoration: InputDecoration(
           hintText: "Name *",
+          hintStyle:
+              TextStyle(color:Colors.black45, letterSpacing: 1.3,fontSize: 14),
           border: OutlineInputBorder(
-            borderSide: BorderSide(color: Colors.black),
+            borderSide: BorderSide(
+              color: $appTheam.primaryColor_01,
+            ),
             borderRadius: BorderRadius.circular(5.0),
           ),
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(5.0),
-            borderSide: BorderSide(color: Colors.black45),
+            borderSide: BorderSide(
+              color: $appTheam.primaryColor_01,
+            ),
           ),
           focusedBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: Colors.black45),
+            borderSide: BorderSide(
+              color: $appTheam.primaryColor_01,
+            ),
             borderRadius: BorderRadius.circular(5.0),
           ),
         ),
@@ -117,6 +151,7 @@ class _CreateUserState extends State<CreateUser> {
             return "mobile number mush 10 digits";
           }
         },
+        cursorColor: $appTheam.primaryColor_01,
         keyboardType: TextInputType.phone,
         inputFormatters: [FilteringTextInputFormatter.digitsOnly],
         textInputAction: TextInputAction.next,
@@ -124,19 +159,25 @@ class _CreateUserState extends State<CreateUser> {
         controller: _mobileNumberController,
         autofocus: false,
         decoration: InputDecoration(
+          hintStyle:
+              TextStyle(color:Colors.black45, letterSpacing: 1.3,fontSize: 14),
           hintText: "MobileNumber *",
           border: OutlineInputBorder(
-            borderSide: BorderSide(color: Colors.black),
+            borderSide: BorderSide(
+              color: $appTheam.primaryColor_01,
+            ),
             borderRadius: BorderRadius.circular(5.0),
           ),
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(5.0),
             borderSide: BorderSide(
-              color: Colors.black45,
+              color: $appTheam.primaryColor_01,
             ),
           ),
           focusedBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: Colors.black45),
+            borderSide: BorderSide(
+              color: $appTheam.primaryColor_01,
+            ),
             borderRadius: BorderRadius.circular(5.0),
           ),
         ),
@@ -164,19 +205,27 @@ class _CreateUserState extends State<CreateUser> {
         focusNode: eMailFocusNode,
         controller: _eMailController,
         autofocus: false,
+        cursorColor: $appTheam.primaryColor_01,
         decoration: InputDecoration(
+
+          hintStyle:
+              TextStyle(color:Colors.black45, letterSpacing: 1.3,fontSize: 14),
           hintText: "Email *",
           border: OutlineInputBorder(
-            borderSide: BorderSide(color: Colors.black),
+            borderSide: BorderSide(
+              color: $appTheam.primaryColor_01,
+            ),
             borderRadius: BorderRadius.circular(5.0),
           ),
           enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(5.0),
               borderSide: BorderSide(
-                color: Colors.black45,
+                color: $appTheam.primaryColor_01,
               )),
           focusedBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: Colors.black45),
+            borderSide: BorderSide(
+              color: $appTheam.primaryColor_01,
+            ),
             borderRadius: BorderRadius.circular(5.0),
           ),
         ),
@@ -225,8 +274,14 @@ class _CreateUserState extends State<CreateUser> {
             }
           }
         },
-        color: Colors.blue,
-        child: Text("ADD"),
+        color: $appTheam.primaryColor_01,
+        child: CustomText(
+          name: "Create User",
+          textFontWeigth: FontWeight.w500,
+          textLetterSpacing: 1.2,
+          textColor: $appTheam.onWhite_01,
+          textSize: 18,
+        ),
       ),
     );
   }
@@ -238,26 +293,17 @@ class _CreateUserState extends State<CreateUser> {
         color: Colors.black,
       ),
       elevation: 0.0,
-      leading: IconButton(
-        icon: Icon(
-          Icons.arrow_back,
-          color: Colors.black,
-        ),
-        onPressed: () {
-          Navigator.pop(context);
-        },
-      ),
+      title: pageText(),
     );
   }
 
   pageText() {
-    return Text(
-      "Create Account",
-      style: TextStyle(
-          color: Colors.black,
-          fontSize: 20,
-          letterSpacing: 1.1,
-          fontWeight: FontWeight.w500),
+    return CustomText(
+      name: "Create Account",
+      textColor: $appTheam.primaryColor_01,
+      textSize: 17,
+      textLetterSpacing: 1.1,
+      textFontWeigth: FontWeight.w500,
     );
   }
 }

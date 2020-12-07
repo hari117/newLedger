@@ -1,104 +1,139 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:newledger/model/apptheam/leader_theam.dart';
 import 'package:newledger/view/view_screens/login_screen.dart';
+import 'package:newledger/view/view_widgets/text_widget.dart';
+import 'package:newledger/view_models/helper_files.dart';
 
 class SearchUser extends StatefulWidget {
   Function callback;
+
   SearchUser({this.callback});
+
   @override
   _SearchUserState createState() => _SearchUserState();
-
-
 }
 
 class _SearchUserState extends State<SearchUser> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: searchUserAppBar(),
       body: listOfUsers(),
     );
   }
 
-  searchUserAppBar()
-  {
+  searchUserAppBar() {
     return AppBar(
-      title: Text(
-        "Choose \nAccout",
-        style: GoogleFonts.muli(
-            letterSpacing: 1.1,
-            fontWeight: FontWeight.bold,
-            color: Colors.black,
-            fontSize: 18),
+      elevation:1,
+      backgroundColor: Colors.white,
+      title: CustomText(
+        name: "Choose Account",
+        textLetterSpacing: 1.1,
+        textFontWeigth: FontWeight.normal,
+        textColor: $appTheam.primaryColor_02,
+      ),
+      leading: IconButton(
+        onPressed: ()
+        {
+          Navigator.pop(context);
+        },
+        icon: Icon(Icons.arrow_back,color: $appTheam.primaryColor_01,),
       ),
     );
   }
 
-  listOfUsers()
-  {
+  listOfUsers() {
     return StreamBuilder(
-      stream:Firestore.instance.collection("UserAccouts").doc(google.currentUser.id).collection("allUsersList").snapshots(),
+      stream: Firestore.instance
+          .collection("UserAccouts")
+          .doc(google.currentUser.id)
+          .collection("allUsersList")
+          .snapshots(),
       builder: (context, snap) {
         if (!snap.hasData) {
           return Center(
-            child: Text("Wait Data is Loading"),
+            child:CustomText(
+              name: "Wait Data is Loading",
+              textLetterSpacing: 1.3,
+              textColor: $appTheam.onWhite_01,
+              textSize: 22,
+            ),
+
           );
         }
-        List<DocumentSnapshot> doc=snap.data.documents;
+        List<DocumentSnapshot> doc = snap.data.documents;
         return ListView.builder(
-
           primary: false,
           shrinkWrap: true,
-
           itemCount: snap.data.documents.length,
           itemBuilder: (context, index) {
-            String userName=doc[index]["name"];
+            String userName = doc[index]["name"];
             return InkWell(
-              onTap: ()
-              {
+              onTap: () {
                 widget.callback(userName);
                 Navigator.pop(context);
               },
               child: Container(
-                width: MediaQuery.of(context).size.width,
-                height: 100,
-                padding: EdgeInsets.symmetric(horizontal: 20),
-                margin: EdgeInsets.symmetric(vertical: 10),
-                child: Row(
-                  children: [
-                    Container(
-                      width: 35,
-                      height: 70,
-                      alignment: Alignment.center,
-                      decoration: BoxDecoration(
-                          color: Colors.blue,
-                          borderRadius: BorderRadius.circular(40)),
-                      child: Text(
-                        "${userName[0]}",
-                        style: GoogleFonts.muli(color: Colors.white, fontSize: 22),
+                alignment: Alignment.center,
+                margin: EdgeInsets.only(left: 20, right: 20, top: 20),
+                padding: EdgeInsets.symmetric(horizontal: 10),
+                height: 80,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(5),
+                  boxShadow: [
+                    BoxShadow(
+                      blurRadius: 3,
+                      color: $appTheam.primaryColor_02.withOpacity(.5),
+                      offset: Offset(
+                        3.0, // Move to right 10  horizontally
+                        3.0, // Move to bottom 10 Vertically
                       ),
                     ),
-                    SizedBox(
-                      width: 10,
-                    ),
-                    Text(
-                      userName,
-                      style: GoogleFonts.muli(
-                          letterSpacing: 1.1,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black,
-                          fontSize: 18),
+                  ],
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Row(
+                      children: [
+                        $helperFile.W20(),
+                        Container(
+                          width: 45,
+                          height: 45,
+                          alignment: Alignment.center,
+                          decoration: BoxDecoration(
+                            color: $appTheam.primaryColor_02,
+                            shape: BoxShape.circle,
+                          ),
+                          child: CustomText(
+                            name: "${userName[0].toUpperCase()}",
+                            textLetterSpacing: 1.3,
+                            textColor: $appTheam.onWhite_01,
+                            textSize: 22,
+                          ),
+
+                        ),
+                        $helperFile.W20(),
+                        CustomText(
+                          name: userName,
+                          textLetterSpacing: 1.3,
+                          textColor: $appTheam.primaryColor_02,
+                          textSize: 17,
+                        ),
+                      ],
                     ),
                   ],
                 ),
               ),
+
             );
           },
         );
       },
     );
   }
-
-
 }

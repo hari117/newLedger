@@ -42,17 +42,33 @@ class HelperFile {
     );
   }
 
+  H50() {
+    return SizedBox(
+      height: 50,
+    );
+  }
+  H80() {
+    return SizedBox(
+      height: 80,
+    );
+  }
 
 
-
-
-
-
-
+  W5(){
+    return SizedBox(
+      width: 5,
+    );
+  }
 
   W10() {
     return SizedBox(
       width: 10,
+    );
+  }
+
+  W20(){
+    return SizedBox(
+      width: 20,
     );
   }
 

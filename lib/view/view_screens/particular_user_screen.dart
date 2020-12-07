@@ -1,15 +1,16 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:newledger/model/apptheam/leader_theam.dart';
 import 'package:newledger/view/view_screens/login_screen.dart';
 import 'package:newledger/view/view_screens/transcation_screen.dart';
 import 'package:newledger/view/view_widgets/particular_transcation_card.dart';
+import 'package:newledger/view/view_widgets/text_widget.dart';
 import 'package:newledger/view_models/helper_files.dart';
+import 'package:loading_indicator/loading_indicator.dart';
 
 class ParticularUserScreen extends StatefulWidget {
   String name;
-
-
 
   ParticularUserScreen({this.name});
 
@@ -19,22 +20,6 @@ class ParticularUserScreen extends StatefulWidget {
 
 class _ParticularUserScreenState extends State<ParticularUserScreen> {
 
-  final scafffoldState = GlobalKey<ScaffoldState>();
-
-  SnackBar s = SnackBar(
-    content: Text("deleted Sucessfully"),
-    backgroundColor: Colors.blue,
-    duration: Duration(seconds: 3),
-  );
-
-  showSnak()
-  {
-    Scaffold.of(context).showSnackBar(
-      SnackBar(
-        content: Text('Have a snack!'),
-      ),
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -42,24 +27,31 @@ class _ParticularUserScreenState extends State<ParticularUserScreen> {
       backgroundColor: Colors.white,
       appBar: particularUserScreenAppBar(),
       body: SingleChildScrollView(
-        child: Column(
+        child: Stack(
           children: [
             upperBody(),
-            lowerBody(),
+         //   lowerBody(),
+            Container(
+              margin: EdgeInsets.only(top: 250),
+              child: lowerBody(),
+            )
+
           ],
-        ),
+        )
       ),
       floatingActionButton: FloatingActionButton(
-        backgroundColor: Colors.blue,
+        backgroundColor: Color(0xFF232D48),
         onPressed: () {
           Navigator.push(
-              context,
-              new MaterialPageRoute(
-                  builder: (context) => TranscationScreen(name: widget.name)));
+            context,
+            new MaterialPageRoute(
+              builder: (context) => TranscationScreen(name: widget.name),
+            ),
+          );
         },
         child: Icon(
           Icons.attach_money,
-          color: Colors.white,
+          color: $appTheam.onWhite_01,
         ),
       ),
     );
@@ -67,18 +59,18 @@ class _ParticularUserScreenState extends State<ParticularUserScreen> {
 
   upperBody() {
     return Container(
-      color: Colors.blue,
-      height: MediaQuery.of(context).size.height * .3,
+      color: Color(0xFF232D48),
       child: Padding(
-        padding: EdgeInsets.only(left: 20),
+        padding: EdgeInsets.only(left: 20, right: 20),
         child: Column(
           children: [
             $helperFile.H10(),
             mobileNumber(),
-            $helperFile.H10(),
+            $helperFile.H15(),
             eMail(),
             overAllAmount(),
             debitAndCreditMoney(),
+            $helperFile.H80(),
           ],
         ),
       ),
@@ -93,17 +85,43 @@ class _ParticularUserScreenState extends State<ParticularUserScreen> {
           .snapshots(),
       builder: (context, snap) {
         if (!snap.hasData) {
-          return Center(
-            child: Text("Wait Data Is Loading"),
+          return Container(
+            width: double.infinity,
+            height: 400,
+            alignment: Alignment.center,
+            child: SizedBox(
+              width: 100,
+              height: 100,
+              child: LoadingIndicator(
+                indicatorType: Indicator.ballClipRotatePulse,
+                color: $appTheam.primaryColor_02,
+              ),
+            ),
           );
         }
         List<DocumentSnapshot> doc = snap.data.documents;
+        if (doc.isEmpty) {
+          return Container(
+            width: double.infinity,
+            height: 400,
+            alignment: Alignment.center,
+            child: CustomText(name:"Currerntly There is No Transcations",textColor: $appTheam.primaryColor_01,textSize: 15,textLetterSpacing: 1.2,),
+            /*child: Text(
+              " Currerntly There is No Transcations",
+              style: GoogleFonts.roboto(
+                  color: Colors.red, fontSize: 15, letterSpacing: 1.2),
+            ),*/
+          );
+        }
         return ListView.builder(
           primary: false,
           shrinkWrap: true,
           itemCount: snap.data.documents.length,
           itemBuilder: (context, index) {
-            return TranscationCard(doc: doc[index], name: widget.name,);
+            return TranscationCard(
+              doc: doc[index],
+              name: widget.name,
+            );
           },
         );
       },
@@ -124,11 +142,11 @@ class _ParticularUserScreenState extends State<ParticularUserScreen> {
         List<DocumentSnapshot> docSnap = snap.data.documents;
         for (DocumentSnapshot d in docSnap) {
           if (widget.name == d["name"]) {
-            return Text(
-              '\$ ${d["inDebit"]}  \nDebit',
-              style: GoogleFonts.muli(
-                  color: Colors.white, fontSize: 10, letterSpacing: 1.1),
-              overflow: TextOverflow.ellipsis,
+            return CustomText(
+              name: "₹ ${d["inDebit"].toString()}",
+              textLetterSpacing: 1.1,
+              textColor: $appTheam.onWhite_01,
+              textSize: 15,
             );
           }
         }
@@ -151,11 +169,11 @@ class _ParticularUserScreenState extends State<ParticularUserScreen> {
         List<DocumentSnapshot> docSnap = snap.data.documents;
         for (DocumentSnapshot d in docSnap) {
           if (widget.name == d["name"]) {
-            return Text(
-              '\$ ${d["inCredit"]}  \nDebit',
-              style: GoogleFonts.muli(
-                  color: Colors.white, fontSize: 10, letterSpacing: 1.1),
-              overflow: TextOverflow.ellipsis,
+            return CustomText(
+              name: "₹ ${d["inCredit"].toString()}",
+              textLetterSpacing: 1.1,
+              textColor: $appTheam.onWhite_01,
+              textSize: 15,
             );
           }
         }
@@ -178,10 +196,10 @@ class _ParticularUserScreenState extends State<ParticularUserScreen> {
         List<DocumentSnapshot> phoneNum = snap.data.documents;
         for (DocumentSnapshot dc in phoneNum) {
           if (dc["name"] == widget.name) {
-            return Text(
-              dc["mobileNumber"],
-              style: GoogleFonts.muli(
-                  letterSpacing: 1.1, color: Colors.white, fontSize: 12),
+            return CustomText(
+              name: dc["mobileNumber"],
+              textLetterSpacing: 1.1,
+              textColor: $appTheam.onWhite_01,
             );
           }
         }
@@ -204,10 +222,11 @@ class _ParticularUserScreenState extends State<ParticularUserScreen> {
         List<DocumentSnapshot> phoneNum = snap.data.documents;
         for (DocumentSnapshot dc in phoneNum) {
           if (dc["name"] == widget.name) {
-            return Text(
-              dc["eMail"],
-              style: GoogleFonts.muli(
-                  letterSpacing: 1.1, color: Colors.white, fontSize: 11),
+            return CustomText(
+              name: dc["eMail"],
+              textLetterSpacing: 1.1,
+              textColor: $appTheam.onWhite_01,
+              textSize: 12,
             );
           }
         }
@@ -233,9 +252,14 @@ class _ParticularUserScreenState extends State<ParticularUserScreen> {
             int total = 0;
             int a = dc["inCredit"];
             int b = dc["inDebit"];
-
             if (a > b) {
               int c = a - b;
+              return CustomText(
+                name: "₹ $c ",
+                textLetterSpacing: 1.2,
+                textColor: $appTheam.onWhite_01,
+                textSize: 20,
+              );
               return Text(
                 "\$ $c Rs",
                 style: GoogleFonts.muli(
@@ -243,6 +267,12 @@ class _ParticularUserScreenState extends State<ParticularUserScreen> {
               );
             } else {
               int c = b - a;
+              return CustomText(
+                name: "₹ $c ",
+                textLetterSpacing: 1.1,
+                textColor: $appTheam.onWhite_01,
+                textSize: 20,
+              );
               return Text(
                 "\$ $c Rs",
                 style: GoogleFonts.muli(
@@ -259,13 +289,18 @@ class _ParticularUserScreenState extends State<ParticularUserScreen> {
   particularUserScreenAppBar() {
     return AppBar(
       elevation: 0,
-      backgroundColor: Colors.blue,
-      title: Text(
+      backgroundColor: Color(0xFF232D48),
+      title: CustomText(
+        name: widget.name,
+        textLetterSpacing: 1.2,
+        textColor: $appTheam.onWhite_01,
+      ),
+      /*  title: Text(
         "${widget.name}",
         style: GoogleFonts.muli(
           letterSpacing: 1.1,
         ),
-      ),
+      ),*/
     );
   }
 
@@ -275,7 +310,7 @@ class _ParticularUserScreenState extends State<ParticularUserScreen> {
         Icon(
           Icons.phone,
           size: 20,
-          color: Colors.white,
+          color: $appTheam.onWhite_01,
         ),
         $helperFile.W10(),
         mobileStreamBuilder(),
@@ -286,7 +321,7 @@ class _ParticularUserScreenState extends State<ParticularUserScreen> {
   overAllAmount() {
     return Container(
       width: double.infinity,
-      height: 50,
+      height: 80,
       alignment: Alignment.center,
       child: overAllDebitAndCreditAmount(),
     );
@@ -298,7 +333,7 @@ class _ParticularUserScreenState extends State<ParticularUserScreen> {
         Icon(
           Icons.mail_outline,
           size: 20,
-          color: Colors.white,
+          color: $appTheam.onWhite_01,
         ),
         $helperFile.W10(),
         eMailStreamBuilder(),
@@ -310,27 +345,52 @@ class _ParticularUserScreenState extends State<ParticularUserScreen> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
-        Row(
-          children: [
-            Icon(
-              Icons.arrow_circle_up,
-              color: Colors.green,
-              size: 70,
+        Expanded(
+          child: Container(
+            margin: EdgeInsets.symmetric(horizontal: 10),
+            height: 80,
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(5),
+              color: $appTheam.primaryColor_02,
             ),
-            $helperFile.W10(),
-            creditStreamBuilder(),
-          ],
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(
+                  Icons.arrow_upward_rounded,
+                  color: Colors.green,
+                  size: 40,
+                ),
+                $helperFile.W5(),
+                creditStreamBuilder(),
+              ],
+            ),
+          ),
         ),
-        Row(
-          children: [
-            Icon(
-              Icons.arrow_circle_down_rounded,
-              color: Colors.red,
-              size: 70,
+        Expanded(
+          child: Container(
+            alignment: Alignment.center,
+            //padding: EdgeInsets.symmetric(horizontal: 30),
+            margin: EdgeInsets.symmetric(horizontal: 10),
+            height: 80,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(5),
+              color: $appTheam.primaryColor_02,
             ),
-            $helperFile.W10(),
-            debitStreamBuilder(),
-          ],
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(
+                  Icons.arrow_downward,
+                  color: Colors.red,
+                  size: 40,
+                ),
+                $helperFile.W5(),
+                debitStreamBuilder(),
+              ],
+            ),
+          ),
         ),
       ],
     );
