@@ -12,8 +12,15 @@ class GlobalState extends ChangeNotifier
 
   bool isAuth=false;
 
+  bool isVisibleName=false;
 
 
+  isVisible(bool value)
+  {
+    print("********* evant called *********");
+    isVisibleName=value;
+    notifyListeners();
+  }
 
   checkGoogleAuth() {
     google.onCurrentUserChanged.listen((GoogleSignInAccount account) {

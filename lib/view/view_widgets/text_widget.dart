@@ -20,7 +20,7 @@ class _CustomTextState extends State<CustomText> {
   @override
   Widget build(BuildContext context) {
     return Text(
-      widget.name,
+      widget.name==null?" " : widget.name,
       style: GoogleFonts.roboto(
         color: widget.textColor,
         fontSize: widget.textSize,

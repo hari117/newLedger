@@ -97,7 +97,6 @@ class _UserCardState extends State<UserCard> {
       child: Container(
         alignment: Alignment.center,
         margin: EdgeInsets.only(left: 20, right: 20, bottom: 20),
-        padding: EdgeInsets.symmetric(horizontal: 10),
         height: 80,
         decoration: BoxDecoration(
           color: Colors.white,
@@ -127,41 +126,34 @@ class _UserCardState extends State<UserCard> {
                     color: $appTheam.primaryColor_02,
                     shape: BoxShape.circle,
                   ),
-                  child: Text(
-                    "${widget.userName[0].toUpperCase()}",
-                    style: GoogleFonts.muli(color: Colors.white, fontSize: 22),
+                  child: CustomText(
+                    name:"${widget.userName[0].toUpperCase()}",
+                    textColor: Colors.white,textSize:  22),
                   ),
-                ),
                 $helperFile.W10(),
                 CustomText(
                   name: widget.userName,
                   textLetterSpacing: 1.3,
                   textColor: $appTheam.primaryColor_02,
                   textSize: 17,
-                )
+                ),
               ],
             ),
             Row(
               children: [
                 overAllDebitAndCreditAmount(),
                 $helperFile.W20(),
-                /*     Container(
-                  height: 40,
-                  width: 40,
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(30),
-                      border: Border.all(color: Colors.black45)),
-                  child: Icon(Icons.chevron_right),
-                ),*/
+
               ],
-            )
+            ),
           ],
         ),
       ),
     );
   }
 
-  overAllDebitAndCreditAmount() {
+  overAllDebitAndCreditAmount()
+  {
     return StreamBuilder(
       stream: Firestore.instance
           .collection("UserAccouts")
@@ -174,20 +166,20 @@ class _UserCardState extends State<UserCard> {
         }
         List<DocumentSnapshot> doc = snap.data.documents;
         for (DocumentSnapshot dc in doc) {
-          if (widget.userName == dc["name"]) {
+          if (widget.userName == dc["name"])
+          {
             int total = 0;
             int a = dc["inCredit"];
             int b = dc["inDebit"];
-
+            int c = a - b;
             if (a > b) {
-              int c = a - b;
+
               return Text(
                 "₹ $c ",
                 style: GoogleFonts.roboto(
                     letterSpacing: 1, fontSize: 20, color: Colors.green),
               );
             } else {
-              int c = b - a;
               return Text(
                 "₹ $c ",
                 style: GoogleFonts.muli(

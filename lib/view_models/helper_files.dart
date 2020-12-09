@@ -34,6 +34,11 @@ class HelperFile {
       height: 30,
     );
   }
+  H35() {
+    return SizedBox(
+      height: 35,
+    );
+  }
 
 
   H40() {
@@ -42,11 +47,30 @@ class HelperFile {
     );
   }
 
+  H45() {
+    return SizedBox(
+      height: 45,
+    );
+  }
   H50() {
     return SizedBox(
       height: 50,
     );
   }
+
+  H55() {
+    return SizedBox(
+      height: 55,
+    );
+  }
+
+  H60()
+  {
+    return SizedBox(
+      height: 60,
+    );
+  }
+
   H80() {
     return SizedBox(
       height: 80,
@@ -65,7 +89,11 @@ class HelperFile {
       width: 10,
     );
   }
-
+  W15() {
+    return SizedBox(
+      width: 15,
+    );
+  }
   W20(){
     return SizedBox(
       width: 20,

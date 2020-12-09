@@ -9,9 +9,5 @@ Color primaryColor_02 =Color(0xFF2B3653);
  Color primaryColor_03 =Color(0xFF232D48);
 
 Color onWhite_01 =Colors.white.withOpacity(.7);
-Color color3 =Colors.red;
-Color color4 =Colors.red;
-
-
 }
 final $appTheam=AppTheam();

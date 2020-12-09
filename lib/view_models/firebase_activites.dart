@@ -65,11 +65,14 @@ class FirebaseCenter {
   }
 
   static Future debitAmout(
-      String amount, String dateTime, String accountName) async {
+      String amount, DateTime dateTime, String accountName,String note) async {
+    String tempNote=note==""?"".toString() :note;
     Map<String, dynamic> map = {
       "type": "Debit",
       "amount": amount,
-      "date": dateTime
+      "date": Timestamp.fromDate(dateTime),
+      "note": tempNote,
+
     };
 
     await allTranscationRef
@@ -96,11 +99,13 @@ class FirebaseCenter {
   }
 
   static Future creditAmount(
-      String amount, String dateTime, String accountName) async {
+      String amount,  DateTime dateTime, String accountName,String note) async {
+    String tempNote=note==""?"".toString() :note;
     Map<String, dynamic> map = {
       "type": "Credit",
       "amount": amount,
-      "date": dateTime
+      "date": Timestamp.fromDate(dateTime),
+      "note": tempNote,
     };
 
     await allTranscationRef

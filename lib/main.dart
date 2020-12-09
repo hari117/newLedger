@@ -16,7 +16,21 @@ void main() async {
 class LedgerTask extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return ChangeNotifierProvider<GlobalState>(
+      create: (context) => GlobalState(),
+      child: MaterialApp(
+        theme: ThemeData(
+            appBarTheme: AppBarTheme(
+                iconTheme: IconThemeData(color: $appTheam.onWhite_01)),
+            iconTheme: IconThemeData(color: Colors.red, opacity: 1)),
+        home: ChangeNotifierProvider<GlobalState>(
+          create: (context) => GlobalState(),
+          child: LoginScreen(),
+        ),
+      ),
+    );
+
+/*    return MaterialApp(
       theme: ThemeData(
           appBarTheme: AppBarTheme(
               iconTheme: IconThemeData(color: $appTheam.onWhite_01)),
@@ -25,6 +39,6 @@ class LedgerTask extends StatelessWidget {
         create: (context) => GlobalState(),
         child: LoginScreen(),
       ),
-    );
+    );*/
   }
 }

@@ -30,10 +30,10 @@ class _SearchUserState extends State<SearchUser> {
       elevation:1,
       backgroundColor: Colors.white,
       title: CustomText(
-        name: "Choose Account",
-        textLetterSpacing: 1.1,
-        textFontWeigth: FontWeight.normal,
+        name:"Choose Account",
+        textLetterSpacing: 1.2,
         textColor: $appTheam.primaryColor_02,
+        textSize: 17,
       ),
       leading: IconButton(
         onPressed: ()
@@ -86,11 +86,11 @@ class _SearchUserState extends State<SearchUser> {
                   borderRadius: BorderRadius.circular(5),
                   boxShadow: [
                     BoxShadow(
-                      blurRadius: 3,
-                      color: $appTheam.primaryColor_02.withOpacity(.5),
+                      blurRadius: 2,
+                      color: $appTheam.primaryColor_02.withOpacity(.3),
                       offset: Offset(
-                        3.0, // Move to right 10  horizontally
-                        3.0, // Move to bottom 10 Vertically
+                        2.0, // Move to right 10  horizontally
+                        2.0, // Move to bottom 10 Vertically
                       ),
                     ),
                   ],
@@ -110,16 +110,13 @@ class _SearchUserState extends State<SearchUser> {
                             shape: BoxShape.circle,
                           ),
                           child: CustomText(
-                            name: "${userName[0].toUpperCase()}",
-                            textLetterSpacing: 1.3,
-                            textColor: $appTheam.onWhite_01,
-                            textSize: 22,
-                          ),
+                              name:"${userName[0].toUpperCase()}",
+                              textColor: Colors.white,textSize:  22),
 
                         ),
                         $helperFile.W20(),
                         CustomText(
-                          name: userName,
+                          name:userName,
                           textLetterSpacing: 1.3,
                           textColor: $appTheam.primaryColor_02,
                           textSize: 17,

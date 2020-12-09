@@ -10,7 +10,7 @@ class GlobalSnakBar {
   static show(BuildContext context, String msg,Color snakColor) {
     Scaffold.of(context).showSnackBar(
       SnackBar(
-       // backgroundColor: snakColor,
+        backgroundColor: snakColor,
         content: CustomText(name:msg,textSize: 14,textColor: $appTheam.onWhite_01,textFontWeigth: FontWeight.normal,textLetterSpacing: 1.1,),
         duration: Duration(seconds: 3),
       ),

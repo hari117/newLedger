@@ -21,8 +21,7 @@ class _NewHomeScreenState extends State<NewHomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      // appBar: homeScreenAppBar(),
-      drawer: homeScreenDrawer(),
+
       body: SingleChildScrollView(
         child: Stack(
           children: [
@@ -37,13 +36,7 @@ class _NewHomeScreenState extends State<NewHomeScreen> {
                   $helperFile.H50(),
                   welcomeQuoteAndLogOut(),
                   $helperFile.H10(),
-                  CustomText(
-                    name: google.currentUser.displayName[0].toUpperCase() +
-                        google.currentUser.displayName.substring(1),
-                    textColor: $appTheam.onWhite_01,
-                    textSize: 14,
-                    textLetterSpacing: 1.3,
-                  ),
+                  displayName(),
                   $helperFile.H25(),
                   debitAndCredit(),
                   $helperFile.H20(),
@@ -81,88 +74,6 @@ class _NewHomeScreenState extends State<NewHomeScreen> {
         InkWell(
           onTap: () {
             logOutDialogBox(context);
-      /*      showDialog(
-                barrierColor: $appTheam.onWhite_01,
-                context: context,
-                barrierDismissible: true,
-                builder: (BuildContext context) {
-                  return Dialog(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(5.0),
-                    ), //this right here
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: $appTheam.primaryColor_01,
-                        borderRadius: BorderRadius.circular(5),
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 15),
-                        child: Column(
-                          mainAxisAlignment:
-                          MainAxisAlignment.center,
-                          crossAxisAlignment:
-                          CrossAxisAlignment.center,
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            $helperFile.H15(),
-                            Container(
-                              height: 70,
-                              width: 70,
-                              decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  image: DecorationImage(
-                                    image: NetworkImage(google
-                                        .currentUser.photoUrl),
-                                  )),
-                            ),
-                            $helperFile.H10(),
-                            Text(
-                              "Are You Sure,\nYou Want To Logout?",
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                  letterSpacing: 1.3,
-                                  height: 1.2,
-                                  color: $appTheam.onWhite_01,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 15),
-                            ),
-                            $helperFile.H5(),
-                            FlatButton(
-                              minWidth: 150,
-                              height: 35,
-                              onPressed: () {
-                                google.signOut();
-                                Navigator.pop(context);
-                              },
-                              child: CustomText(
-                                name: "Logout",
-                                textSize: 18,
-                                textColor: Colors.red,
-                              ),
-                              color: $appTheam.primaryColor_02,
-                            ),
-                            FlatButton(
-                              minWidth: 150,
-                              height: 35,
-                              onPressed: () {
-                                Navigator.pop(context);
-                              },
-                              child: CustomText(
-                                name: "Cancel",
-                                textSize: 18,
-                                textColor: Colors.green,
-                              ),
-                              color: $appTheam.primaryColor_02,
-                            ),
-                            $helperFile.H15(),
-
-                          ],
-                        ),
-                      ),
-                    ),
-                  );
-                });*/
           },
           child: Container(
             width: 42,
@@ -180,13 +91,22 @@ class _NewHomeScreenState extends State<NewHomeScreen> {
     );
   }
 
+  displayName()
+  {
+    return CustomText(
+      name: google.currentUser.displayName[0].toUpperCase() +
+          google.currentUser.displayName.substring(1),
+      textColor: $appTheam.onWhite_01,
+      textSize: 14,
+      textLetterSpacing: 1.3,
+    );
+  }
 
   debitAndCredit() {
     return Row(
       children: [
         Flexible(
           child: Container(
-
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(5),
               boxShadow: [
@@ -241,6 +161,55 @@ class _NewHomeScreenState extends State<NewHomeScreen> {
     );
   }
 
+  lowerPart() {
+    return StreamBuilder(
+      stream: Firestore.instance
+          .collection("UserAccouts")
+          .doc(google.currentUser.id)
+          .collection("allUsersList")
+          .snapshots(),
+      builder: (context, snap) {
+        if (!snap.hasData) {
+          return Container(
+            width: double.infinity,
+            height: 400,
+            alignment: Alignment.center,
+            child: SizedBox(
+              width: 100,
+              height: 100,
+              child: LoadingIndicator(
+                indicatorType: Indicator.ballClipRotatePulse,
+                color:$appTheam.primaryColor_02,
+              ),
+            ),
+          );
+        }
+        List<DocumentSnapshot> doc = snap.data.documents;
+        if (doc.isEmpty) {
+          return Container(
+              width: double.infinity,
+              height: 400,
+              alignment: Alignment.center,
+              child: Text(
+                " Currerntly There is No Transcations",
+                style: GoogleFonts.roboto(
+                    color: Colors.red, fontSize: 15, letterSpacing: 1.2),
+              ));
+        }
+        return ListView.builder(
+          primary: false,
+          shrinkWrap: true,
+          itemCount: snap.data.documents.length,
+          itemBuilder: (context, index) {
+            String userName = doc[index]["name"];
+            return UserCard(
+              userName: userName,
+            );
+          },
+        );
+      },
+    );
+  }
   speedDailFloatingButton() {
     return SpeedDial(
       elevation: .1,
@@ -361,117 +330,6 @@ class _NewHomeScreenState extends State<NewHomeScreen> {
     );
   }
 
-  homeScreenAppBar() {
-    return AppBar(
-      title: Text(
-        "Ledger Book",
-        style: GoogleFonts.muli(letterSpacing: 1.2),
-      ),
-      backgroundColor: Colors.blue,
-      elevation: 0.0,
-      centerTitle: false,
-    );
-  }
-
-  homeScreenDrawer() {
-    return Drawer(
-      elevation: 30,
-      child: Container(
-        child: Padding(
-          padding: EdgeInsets.only(left: 10),
-          child: Column(
-            children: [
-              $helperFile.H25(),
-              CircleAvatar(
-                maxRadius: 50,
-                backgroundImage: NetworkImage(google.currentUser.photoUrl),
-              ),
-              $helperFile.H15(),
-              Text(
-                google.currentUser.displayName,
-                style: GoogleFonts.muli(fontSize: 22, letterSpacing: 1),
-              ),
-              $helperFile.H15(),
-              Text(
-                google.currentUser.email,
-                style: GoogleFonts.muli(fontSize: 14, letterSpacing: 1),
-              ),
-              $helperFile.H30(),
-              MaterialButton(
-                onPressed: () {
-                  google.signOut();
-                },
-                child: Text(
-                  "Sign Out",
-                  style: GoogleFonts.muli(
-                      fontSize: 18, letterSpacing: 1, color: Colors.white),
-                ),
-                height: 50,
-                color: Colors.blue,
-                minWidth: 150,
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-
-
-  lowerPart() {
-    return StreamBuilder(
-      stream: Firestore.instance
-          .collection("UserAccouts")
-          .doc(google.currentUser.id)
-          .collection("allUsersList")
-          .snapshots(),
-      builder: (context, snap) {
-        if (!snap.hasData) {
-          return Container(
-            width: double.infinity,
-            height: 400,
-            alignment: Alignment.center,
-            child: SizedBox(
-              width: 100,
-              height: 100,
-              child: LoadingIndicator(
-                indicatorType: Indicator.ballClipRotatePulse,
-                color:$appTheam.primaryColor_02,
-              ),
-            ),
-          );
-        }
-        List<DocumentSnapshot> doc = snap.data.documents;
-        if (doc.isEmpty) {
-          return Container(
-              width: double.infinity,
-              height: 400,
-              alignment: Alignment.center,
-              child: Text(
-                " Currerntly There is No Transcations",
-                style: GoogleFonts.roboto(
-                    color: Colors.red, fontSize: 15, letterSpacing: 1.2),
-              ));
-        }
-        return ListView.builder(
-          primary: false,
-          shrinkWrap: true,
-          itemCount: snap.data.documents.length,
-          itemBuilder: (context, index) {
-            String userName = doc[index]["name"];
-            return UserCard(
-              userName: userName,
-            );
-          },
-        );
-      },
-    );
-  }
-
-
-
-
   logOutDialogBox(context)
   {
     showDialog(
@@ -549,7 +407,6 @@ class _NewHomeScreenState extends State<NewHomeScreen> {
                       color: $appTheam.primaryColor_02,
                     ),
                     $helperFile.H15(),
-
                   ],
                 ),
               ),
