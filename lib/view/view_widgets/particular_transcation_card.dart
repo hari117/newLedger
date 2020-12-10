@@ -46,13 +46,15 @@ class _TranscationCardState extends State<TranscationCard> {
             icon: Icons.upgrade,
             color: $appTheam.primaryColor_02,
             onTap: ()
-            {
+           async {
 
-              new MaterialPageRoute(
-                builder: (context) => TranscationScreen(name:widget.name,documentSnapshot: widget.doc,),
-              );
+              print("update icon is pressed entry");
+              Navigator.push(
+                  context, new MaterialPageRoute(
+                  builder: (context) => TranscationScreen(name:widget.name,documentSnapshot: widget.doc,),));
 
 
+              print("update icon is pressed exit");
 
 
             },
@@ -148,21 +150,10 @@ class _TranscationCardState extends State<TranscationCard> {
           alignment: Alignment.center,
           padding: EdgeInsets.symmetric(horizontal: 20),
           decoration: BoxDecoration(
-           /* border: Border(
-                left: BorderSide(
-              color: colorType,
-              width: 3,
-            )),*/
+
             color: Colors.white,
             boxShadow: [
-         /*     BoxShadow(
-                blurRadius: 2,
-                color: $appTheam.primaryColor_02.withOpacity(.3),
-                offset: Offset(
-                  2.0, // Move to right 10  horizontally
-                  3.0, // Move to bottom 10 Vertically
-                ),
-              ),*/
+
             ],
           ),
           child: Row(
@@ -185,14 +176,14 @@ class _TranscationCardState extends State<TranscationCard> {
                       Row(
                         children: [
                           Icon(
-                            Icons.note_add,
+                            Icons.note,
                             color: $appTheam.primaryColor_02,
                             size: 15,
                           ),
                           $helperFile.W5(),
                           Expanded(
                             child: CustomText(
-                              name: widget.doc["note"].toString(),
+                              name: widget.doc["note"].toString()=="" ?"Empty Note":widget.doc["note"].toString(),
                               textColor: $appTheam.primaryColor_03,
                               textSize: 10,
                             ),

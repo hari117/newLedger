@@ -64,6 +64,24 @@ class FirebaseCenter {
     }
   }
 
+  static Future UpdateRecord(
+      DocumentSnapshot doc,String amount, DateTime dateTime, String accountName,String note) async {
+    String tempNote=note==""?"".toString() :note;
+    Map<String, dynamic> map = {
+      "type": "Debit",
+      "amount": amount,
+      "date": Timestamp.fromDate(dateTime),
+      "note": tempNote,
+
+    };
+
+    await allTranscationRef
+        .doc(google.currentUser.id)
+        .collection(accountName)
+        .document(doc.id)
+        .update(map);
+  }
+
   static Future debitAmout(
       String amount, DateTime dateTime, String accountName,String note) async {
     String tempNote=note==""?"".toString() :note;

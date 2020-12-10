@@ -39,8 +39,23 @@ class _TranscationScreenState extends State<TranscationScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    _accoutNameController.text = widget.name;
-    _dateTimeController.text=dateTime;
+    if( widget.documentSnapshot!= null)
+      {
+        _accoutNameController.text=widget.name;
+        _transcationAmountController.text=widget.documentSnapshot["amount"];
+        print("**** ${widget.documentSnapshot["note"]}****");
+        _noteController.text=widget.documentSnapshot["note"];
+        _dateTimeController.text=DateFormat('dd M yyyy').format(widget.documentSnapshot["date"].toDate()).toString();
+        setState(() {
+
+        });
+
+      }else
+        {
+          _accoutNameController.text = widget.name;
+          _dateTimeController.text=dateTime;
+        }
+
   }
 
   @override
@@ -132,7 +147,13 @@ class _TranscationScreenState extends State<TranscationScreen> {
     return AppBar(
       elevation: 0,
       backgroundColor: $appTheam.primaryColor_03,
-      title: CustomText(
+      title: widget.documentSnapshot!= null ?CustomText(
+      name: "Update transcation",
+      textLetterSpacing: 1.1,
+      textFontWeigth: FontWeight.normal,
+      textColor: $appTheam.onWhite_01,
+      textSize: 17,
+    ) :CustomText(
         name: "New Transcation",
         textLetterSpacing: 1.1,
         textFontWeigth: FontWeight.normal,
@@ -377,7 +398,21 @@ class _TranscationScreenState extends State<TranscationScreen> {
         splashColor: $appTheam.primaryColor_03,
         onPressed: () async {
           print("the selected payment type is $indentiItem");
-          if (_accoutNameController.text == null ||
+          if(widget.documentSnapshot !=null)
+            {
+              await FirebaseCenter.UpdateRecord(widget.documentSnapshot,
+                                  _transcationAmountController.text,
+                                  firebaseDateTime,
+                                  _accoutNameController.text,
+                                  _noteController.text);
+                              _transcationAmountController.clear();
+                              dateTime = null;
+                              _accoutNameController.clear();
+                              _noteController.clear();
+                              indentiItem = null;
+                              Navigator.pop(context);
+            }
+          else if (_accoutNameController.text == null ||
               _accoutNameController.text == "" ||
               _transcationAmountController.text == null ||
               _transcationAmountController.text == "") {
@@ -400,6 +435,8 @@ class _TranscationScreenState extends State<TranscationScreen> {
                 _noteController.clear();
                 indentiItem = null;
                 Navigator.pop(context);
+
+
               } else {
                 await FirebaseCenter.creditAmount(
                     _transcationAmountController.text,
