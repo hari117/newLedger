@@ -6,6 +6,7 @@ import 'package:newledger/model/apptheam/leader_theam.dart';
 import 'package:newledger/model/globalState.dart';
 import 'package:newledger/view/view_screens/login_screen.dart';
 import 'package:newledger/view/view_screens/transcation_screen.dart';
+import 'package:newledger/view/view_widgets/loading_widget.dart';
 import 'package:newledger/view/view_widgets/particular_transcation_card.dart';
 import 'package:newledger/view/view_widgets/text_widget.dart';
 import 'package:newledger/view_models/helper_files.dart';
@@ -119,7 +120,7 @@ class _ParticularUserScreenState extends State<ParticularUserScreen> {
           children: [
             Row(
               children: [
-                Flexible(
+                Expanded(flex: 2,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -142,7 +143,7 @@ class _ParticularUserScreenState extends State<ParticularUserScreen> {
             ),
             $helperFile.H40(),
             debitAndCreditMoney(),
-            $helperFile.H80(),
+            $helperFile.H50(),
           ],
         ),
       ),
@@ -161,10 +162,7 @@ class _ParticularUserScreenState extends State<ParticularUserScreen> {
             child: SizedBox(
               width: 100,
               height: 100,
-              child: LoadingIndicator(
-                indicatorType: Indicator.ballClipRotatePulse,
-                color: $appTheam.primaryColor_02,
-              ),
+              child: CustomLoadingWidget(),
             ),
           );
         }
@@ -185,7 +183,7 @@ class _ParticularUserScreenState extends State<ParticularUserScreen> {
         return ListView.separated(
           separatorBuilder: (context,index)
           {
-            return $helperFile.H30();
+            return Divider(color:Colors.black.withOpacity(.3),thickness: .25,);
           },
           primary: false,
           shrinkWrap: true,
@@ -333,7 +331,7 @@ class _ParticularUserScreenState extends State<ParticularUserScreen> {
                 name: "₹ $c ",
                 textLetterSpacing: 1.2,
                 textColor: Colors.green,
-                textSize: 22,
+                textSize: 18,
                 textFontWeigth: FontWeight.bold,
               );
             } else {
@@ -341,7 +339,7 @@ class _ParticularUserScreenState extends State<ParticularUserScreen> {
                 name: "₹ $c ",
                 textLetterSpacing: 1.1,
                 textColor: Colors.red,
-                textSize: 25,
+                textSize: 20,
                 textFontWeigth: FontWeight.normal,
                 textFontStyle: FontStyle.italic,
               );

@@ -20,14 +20,14 @@ class _CustomTextState extends State<CustomText> {
   @override
   Widget build(BuildContext context) {
     return Text(
-      widget.name==null?" " : widget.name,
-      style: GoogleFonts.roboto(
+      widget.name==null?"N" : widget.name,
+      style: GoogleFonts.openSans(
         color: widget.textColor,
         fontSize: widget.textSize,
         letterSpacing: widget.textLetterSpacing,
         fontWeight: widget.textFontWeigth,
           fontStyle: widget.textFontStyle,
-      ),
+      ),overflow: TextOverflow.ellipsis,
     );
   }
 }

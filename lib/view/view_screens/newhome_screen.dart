@@ -7,6 +7,7 @@ import 'package:newledger/model/apptheam/leader_theam.dart';
 import 'package:newledger/view/view_screens/add_user_screen.dart';
 import 'package:newledger/view/view_screens/login_screen.dart';
 import 'package:newledger/view/view_screens/transcation_screen.dart';
+import 'package:newledger/view/view_widgets/loading_widget.dart';
 import 'package:newledger/view/view_widgets/text_widget.dart';
 import 'package:newledger/view/view_widgets/usercard_widget.dart';
 import 'package:newledger/view_models/helper_files.dart';
@@ -83,7 +84,6 @@ class _NewHomeScreenState extends State<NewHomeScreen> {
                   image:
                   NetworkImage(google.currentUser.photoUrl),
                 ),
-                color: Colors.blue,
                 shape: BoxShape.circle),
           ),
         )
@@ -177,10 +177,7 @@ class _NewHomeScreenState extends State<NewHomeScreen> {
             child: SizedBox(
               width: 100,
               height: 100,
-              child: LoadingIndicator(
-                indicatorType: Indicator.ballClipRotatePulse,
-                color:$appTheam.primaryColor_02,
-              ),
+              child: CustomLoadingWidget(),
             ),
           );
         }

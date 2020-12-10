@@ -2,6 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:newledger/model/apptheam/leader_theam.dart';
+import 'package:newledger/view/view_screens/particular_user_screen.dart';
+import 'package:newledger/view/view_screens/transcation_screen.dart';
 import 'package:newledger/view/view_widgets/snakbar.dart';
 import 'package:newledger/view/view_widgets/text_widget.dart';
 import 'package:newledger/view_models/firebase_activites.dart';
@@ -19,8 +21,8 @@ class TranscationCard extends StatefulWidget {
 }
 
 class _TranscationCardState extends State<TranscationCard> {
-  bool isExpand = false;
-  bool isMove = false;
+  /*bool isExpand = false;
+  bool isMove = false;*/
 
   @override
   Widget build(BuildContext context) {
@@ -43,13 +45,23 @@ class _TranscationCardState extends State<TranscationCard> {
             foregroundColor: Colors.green,
             icon: Icons.upgrade,
             color: $appTheam.primaryColor_02,
+            onTap: ()
+            {
+
+              new MaterialPageRoute(
+                builder: (context) => TranscationScreen(name:widget.name,documentSnapshot: widget.doc,),
+              );
+
+
+
+
+            },
           ),
           IconSlideAction(
             icon: Icons.delete,
             foregroundColor: Colors.red,
             color: $appTheam.primaryColor_02,
-            onTap: ()
-            {
+            onTap: () {
               showDialog(
                   barrierColor: $appTheam.onWhite_01,
                   context: context,
@@ -85,7 +97,8 @@ class _TranscationCardState extends State<TranscationCard> {
                               ),
                               $helperFile.H30(),
                               Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceAround,
                                 children: [
                                   FlatButton(
                                     minWidth: 100,
@@ -104,8 +117,9 @@ class _TranscationCardState extends State<TranscationCard> {
                                     minWidth: 100,
                                     height: 35,
                                     onPressed: () async {
-                                      FirebaseCenter.deleteParticularTranscationList(
-                                          widget.doc, widget.name);
+                                      FirebaseCenter
+                                          .deleteParticularTranscationList(
+                                              widget.doc, widget.name);
                                       triggerSnakbar();
                                       Navigator.pop(context);
                                     },
@@ -129,101 +143,76 @@ class _TranscationCardState extends State<TranscationCard> {
           ),
         ],
         child: Container(
-         //  margin: EdgeInsets.only(left: 20,right: 20),
+          height: 90,
+          // margin: EdgeInsets.only(left: 20),
           alignment: Alignment.center,
-         padding: EdgeInsets.symmetric(horizontal: 30),
+          padding: EdgeInsets.symmetric(horizontal: 20),
           decoration: BoxDecoration(
-            border: Border(
+           /* border: Border(
                 left: BorderSide(
               color: colorType,
               width: 3,
-            )),
+            )),*/
             color: Colors.white,
             boxShadow: [
-              BoxShadow(
+         /*     BoxShadow(
                 blurRadius: 2,
                 color: $appTheam.primaryColor_02.withOpacity(.3),
                 offset: Offset(
                   2.0, // Move to right 10  horizontally
                   3.0, // Move to bottom 10 Vertically
                 ),
-              ),
+              ),*/
             ],
           ),
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                /*  $helperFile.H5(),
-                  Row(
+              model_01(),
+              Expanded(
+                child: Padding(
+                  padding:EdgeInsets.only(left: 10),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Icon(
-                        Icons.calendar_today,
-                        color: $appTheam.primaryColor_02,
-                        size: 15,
-                      ),
-                      $helperFile.W10(),
-                      CustomText(
-                        name:
-                            "${DateFormat('MM-dd-yyyy').format(widget.doc["date"].toDate()).toString()}",
-                        textColor: $appTheam.primaryColor_01,
-                      ),
-                    ],
-                  ),
-                  $helperFile.H5(),
-                  Row(
-                    children: [
-                      Icon(
-                        Icons.lock_clock,
-                        color: $appTheam.primaryColor_02,
-                        size: 15,
-                      ),
-                      $helperFile.W10(),
-                      CustomText(
-                        name:"${DateFormat('HH-mm').format(widget.doc["date"].toDate()).toString()}",
-                        textColor: $appTheam.primaryColor_01,
-                      ),
-                    ],
-                  ),
-                  $helperFile.H5(),
-                  Row(
-                    children: [
-                      Icon(
-                        Icons.note,
-                        color: $appTheam.primaryColor_02,
-                        size: 15,
-                      ),
-                      $helperFile.W10(),
-                      CustomText(
-                        name: widget.doc["note"].toString(),
-                        textColor: $appTheam.primaryColor_01,
-                      ),
-                    ],
-                  ),
-                  $helperFile.H5(),*/
-                  model_01(),
-                ],
-              ),
 
-              Column(
-              //  mainAxisAlignment: MainAxisAlignment.end,
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  CustomText(
-                    name: "₹ ${widget.doc["amount"]}",
-                    textColor: colorType,
-                    textSize: 18,
+                      $helperFile.H15(),
+                      CustomText(
+                        name: "₹ ${widget.doc["amount"]}",
+                        textColor: $appTheam.primaryColor_03,
+                        textSize: 18,
+                      ),
+                      $helperFile.H10(),
+                      Row(
+                        children: [
+                          Icon(
+                            Icons.note_add,
+                            color: $appTheam.primaryColor_02,
+                            size: 15,
+                          ),
+                          $helperFile.W5(),
+                          Expanded(
+                            child: CustomText(
+                              name: widget.doc["note"].toString(),
+                              textColor: $appTheam.primaryColor_03,
+                              textSize: 10,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
                   ),
-                  $helperFile.H10(),
-                  CustomText(
-                    name: widget.doc["type"],
-                    textColor: colorType,
-                    textSize: 10,
-                  ),
-                ],
+                ),
+              ),
+              Container(
+                width: 50,
+                height: 50,
+                alignment: Alignment.topRight,
+                child: CustomText(
+                  name: "${widget.doc["type"].toString().toUpperCase()}",
+                  textColor: colorType,
+                  textSize: 10,
+                  textFontWeigth: FontWeight.bold,
+                ),
               ),
             ],
           ),
@@ -232,17 +221,7 @@ class _TranscationCardState extends State<TranscationCard> {
     );
   }
 
-  moveUpdates(DragUpdateDetails details) {
-    if (details.delta.dx < 0) {
-      setState(() {
-        isMove = true;
-      });
-    } else {
-      setState(() {
-        isMove = false;
-      });
-    }
-  }
+
 
   triggerSnakbar() {
     GlobalSnakBar.show(
@@ -336,130 +315,69 @@ class _TranscationCardState extends State<TranscationCard> {
     );
   }
 
+  updateRecord() {}
+
+  model_01() {
+    return Container(
+          width: 100,
+          /*height: 75,*/
+      margin: EdgeInsets.symmetric(vertical: 10),
+          padding: EdgeInsets.symmetric(horizontal:10,vertical:10),
+          alignment: Alignment.center,
+          decoration: BoxDecoration(
+              color: Colors.black.withOpacity(.05),
+              borderRadius: BorderRadius.circular(5)),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              //this is time and pm
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  CustomText(
+                    name:
+                    "${DateFormat('hh:mm').format(widget.doc["date"].toDate()).toString()}",
+                    textColor: $appTheam.primaryColor_01,textSize: 15,textFontWeigth: FontWeight.bold,
+                  ),
+                  CustomText(
+                    name:
+                    "${DateFormat('a').format(widget.doc["date"].toDate()).toString()}",
+                    textColor: $appTheam.primaryColor_01,textSize: 15,textFontWeigth: FontWeight.bold,
+                  ),
+                ],
+              ),
+              $helperFile.H5(),
+              Row(
+                children: [
+                  // this widget represent date
+                  CustomText(
+                    name:
+                        "${DateFormat('dd MMM yyyy').format(widget.doc["date"].toDate()).toString().toUpperCase()}",
+                    textColor: $appTheam.primaryColor_03,textSize: 9,textLetterSpacing: 1.1,textFontWeigth: FontWeight.bold,
+                  ),
+
+                  //this widget represent month
+
+                /*  CustomText(
+                    name:
+                        "${DateFormat('MMM').format(widget.doc["date"].toDate()).toString().toUpperCase()}",
+                    textColor: $appTheam.primaryColor_03,textSize: 10,textLetterSpacing: 1.1,
+                  ),
+
+                  //this widget represent year
+                  CustomText(
+                    name:
+                        "${DateFormat('yyyy').format(widget.doc["date"].toDate()).toString()}",
+                    textColor: $appTheam.primaryColor_03,textSize: 10,
+                  ),*/
+                ],
+              ),
+            ],
+          ),
+        );
 
 
-  model_01()
-  {
-     return Column(
-       crossAxisAlignment: CrossAxisAlignment.start,
-       children: [
-         $helperFile.H10(),
-         Row(children: [
-           Row(
-             children: [
-               Icon(
-                 Icons.calendar_today,
-                 color: $appTheam.primaryColor_02,
-                 size: 15,
-               ),
-               $helperFile.W10(),
-               CustomText(
-                 name:
-                 "${DateFormat('MM-dd-yyyy').format(widget.doc["date"].toDate()).toString()}",
-                 textColor: $appTheam.primaryColor_01,
-               ),
-             ],
-           ),
-           $helperFile.W15(),
-           Row(
-             children: [
-               Icon(
-                 Icons.update,
-                 color: $appTheam.primaryColor_02,
-                 size: 15,
-               ),
-               $helperFile.W5(),
-               CustomText(
-                 name:"${DateFormat('HH-mm').format(widget.doc["date"].toDate()).toString()}",
-                 textColor: $appTheam.primaryColor_01,
-               ),
-             ],
-           ),
-         ],),
-         $helperFile.H10(),
-         Row(
-           children: [
-             Icon(
-               Icons.note_add,
-               color: $appTheam.primaryColor_02,
-               size: 15,
-             ),
-             $helperFile.W10(),
-             CustomText(
-               name: widget.doc["note"].toString(),
-               textColor: $appTheam.primaryColor_01,
-             ),
-           ],
-         ),
-         $helperFile.H10(),
-       ],
-     );
+
   }
-
-  model_02()
-  {
-   return Column(
-     crossAxisAlignment: CrossAxisAlignment.start,
-     children: [
-       $helperFile.H5(),
-       Row(
-         children: [
-           Icon(
-             Icons.calendar_today,
-             color: $appTheam.primaryColor_02,
-             size: 15,
-           ),
-           $helperFile.W10(),
-           CustomText(
-             name:
-             "${DateFormat('MM-dd-yyyy').format(widget.doc["date"].toDate()).toString()}",
-             textColor: $appTheam.primaryColor_01,
-           ),
-         ],
-       ),
-       $helperFile.H5(),
-       Row(
-         children: [
-           Icon(
-             Icons.lock_clock,
-             color: $appTheam.primaryColor_02,
-             size: 15,
-           ),
-           $helperFile.W10(),
-           CustomText(
-             name:"${DateFormat('HH-mm').format(widget.doc["date"].toDate()).toString()}",
-             textColor: $appTheam.primaryColor_01,
-           ),
-         ],
-       ),
-       $helperFile.H5(),
-       Row(
-         children: [
-           Icon(
-             Icons.note,
-             color: $appTheam.primaryColor_02,
-             size: 15,
-           ),
-           $helperFile.W10(),
-           CustomText(
-             name: widget.doc["note"].toString(),
-             textColor: $appTheam.primaryColor_01,
-           ),
-         ],
-       ),
-       $helperFile.H5(),
-     ],
-   );
-  }
-
-
-
-
-
-
-
-
-
 }
-
-
