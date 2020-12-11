@@ -33,7 +33,7 @@ class _TranscationScreenState extends State<TranscationScreen> {
   final nameKey = GlobalKey<FormFieldState>();
   final noteKey = GlobalKey<FormFieldState>();
 
-  String indentiItem = "CREDIT";
+  String indentiItem = "Credit";
 
   @override
   void initState() {
@@ -41,13 +41,14 @@ class _TranscationScreenState extends State<TranscationScreen> {
     super.initState();
     if( widget.documentSnapshot!= null)
       {
-        _accoutNameController.text=widget.name;
-        _transcationAmountController.text=widget.documentSnapshot["amount"];
-        print("**** ${widget.documentSnapshot["note"]}****");
-        _noteController.text=widget.documentSnapshot["note"];
-        _dateTimeController.text=DateFormat('dd M yyyy').format(widget.documentSnapshot["date"].toDate()).toString();
-        setState(() {
 
+        setState(() {
+          _accoutNameController.text=widget.name;
+          _transcationAmountController.text=widget.documentSnapshot["amount"];
+          print("**** ${widget.documentSnapshot["note"]}****");
+          _noteController.text=widget.documentSnapshot["note"];
+          _dateTimeController.text=DateFormat('dd M yyyy').format(widget.documentSnapshot["date"].toDate()).toString();
+          indentiItem="Credit";
         });
 
       }else
@@ -398,60 +399,40 @@ class _TranscationScreenState extends State<TranscationScreen> {
         splashColor: $appTheam.primaryColor_03,
         onPressed: () async {
           print("the selected payment type is $indentiItem");
-          if(widget.documentSnapshot !=null)
-            {
-              await FirebaseCenter.UpdateRecord(widget.documentSnapshot,
-                                  _transcationAmountController.text,
-                                  firebaseDateTime,
-                                  _accoutNameController.text,
-                                  _noteController.text);
-                              _transcationAmountController.clear();
-                              dateTime = null;
-                              _accoutNameController.clear();
-                              _noteController.clear();
-                              indentiItem = null;
-                              Navigator.pop(context);
-            }
+          if (widget.documentSnapshot != null) {
+            await $fireBase.UpdateRecord(widget.documentSnapshot,
+              _transcationAmountController.text,
+              indentiItem,
+              widget.name,
+              firebaseDateTime,
+              _noteController.text,
+            );
+            _transcationAmountController.clear();
+            dateTime = null;
+            _accoutNameController.clear();
+            _noteController.clear();
+            indentiItem = null;
+            Navigator.pop(context);
+          }
           else if (_accoutNameController.text == null ||
               _accoutNameController.text == "" ||
               _transcationAmountController.text == null ||
               _transcationAmountController.text == "") {
             alertDialogWidget(context);
-          } else if (indentiItem == "") {
-            alertDialogWidget(context);
           } else {
-            if (indentiItem == null) {
-              alertDialogWidget(context);
-            } else {
-              if (indentiItem == "DEBIT") {
-                await FirebaseCenter.debitAmout(
-                    _transcationAmountController.text,
-                    firebaseDateTime,
-                    _accoutNameController.text,
-                    _noteController.text);
-                _transcationAmountController.clear();
-                dateTime = null;
-                _accoutNameController.clear();
-                _noteController.clear();
-                indentiItem = null;
-                Navigator.pop(context);
-
-
-              } else {
-                await FirebaseCenter.creditAmount(
-                    _transcationAmountController.text,
-                    firebaseDateTime,
-                    _accoutNameController.text,
-                    _noteController.text);
-                _transcationAmountController.clear();
-                _accoutNameController.clear();
-                _noteController.clear();
-                dateTime = null;
-                Navigator.pop(context);
-                indentiItem = "";
-              }
-            }
+            await $fireBase.putAmount(
+                _transcationAmountController.text,
+                firebaseDateTime,
+                _accoutNameController.text,
+                _noteController.text,indentiItem);
+            _transcationAmountController.clear();
+            dateTime = null;
+            _accoutNameController.clear();
+            _noteController.clear();
+            indentiItem = null;
+            Navigator.pop(context);
           }
+
         },
         child: CustomText(
           name: "Submit",
@@ -475,7 +456,7 @@ class _TranscationScreenState extends State<TranscationScreen> {
         children: [
           Radio(
               activeColor: Colors.green,
-              value: "CREDIT",
+              value: "Credit",
               groupValue: indentiItem,
               onChanged: (value) {
                 setState(
@@ -493,7 +474,7 @@ class _TranscationScreenState extends State<TranscationScreen> {
           $helperFile.W20(),
           Radio(
             activeColor: Colors.red,
-            value: "DEBIT",
+            value: "Debit",
             groupValue: indentiItem,
             onChanged: (value) {
               setState(

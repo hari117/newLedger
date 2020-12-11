@@ -68,7 +68,7 @@ class _UserCardState extends State<UserCard> {
                     ),
                     onPressed: () async {
                       //Put your code here which you want to execute on Yes button click.
-                      FirebaseCenter.deleteParticularUser(widget.userName);
+                      $fireBase.deleteParticularUser(widget.userName);
                       Navigator.of(context).pop();
                       // await Firestore.instance
                       //     .collection("UserAccouts")
@@ -128,7 +128,7 @@ class _UserCardState extends State<UserCard> {
                   ),
                   child: CustomText(
                     name:"${widget.userName[0].toUpperCase()}",
-                    textColor: Colors.white,textSize:  22),
+                    textColor: Colors.white,textSize:  18),
                   ),
                 $helperFile.W10(),
                 CustomText(

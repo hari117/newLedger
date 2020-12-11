@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
 import 'package:newledger/view/view_screens/login_screen.dart';
 
 class FirebaseCenter {
@@ -7,7 +8,7 @@ class FirebaseCenter {
   static CollectionReference allTranscationRef =
       Firestore.instance.collection("Transactions");
 
-  static checkUsersInFireBase(String num) async {
+  checkUsersInFireBase(String num) async {
     DocumentSnapshot doc = await userAccountRef.document(num).get();
     if (!doc.exists) {
       Map<String, dynamic> map = {
@@ -37,7 +38,7 @@ class FirebaseCenter {
         .setData(map);
   }
 
-  static Future deleteParticularUser(String name) async {
+  Future deleteParticularUser(String name) async {
     await Firestore.instance
         .collection("UserAccouts")
         .doc(google.currentUser.id)
@@ -64,15 +65,14 @@ class FirebaseCenter {
     }
   }
 
-  static Future UpdateRecord(
-      DocumentSnapshot doc,String amount, DateTime dateTime, String accountName,String note) async {
-    String tempNote=note==""?"".toString() :note;
+  Future UpdateRecord(DocumentSnapshot doc, String amount, String amontType,
+      String accountName, DateTime dateTime, String note) async {
+    String tempNote = note == "" ? "".toString() : note;
     Map<String, dynamic> map = {
-      "type": "Debit",
+      "type": amontType,
       "amount": amount,
       "date": Timestamp.fromDate(dateTime),
       "note": tempNote,
-
     };
 
     await allTranscationRef
@@ -80,47 +80,14 @@ class FirebaseCenter {
         .collection(accountName)
         .document(doc.id)
         .update(map);
+    commonFuntion(accountName);
   }
 
-  static Future debitAmout(
-      String amount, DateTime dateTime, String accountName,String note) async {
-    String tempNote=note==""?"".toString() :note;
+  Future putAmount(String amount, DateTime dateTime, String accountName,
+      String note, String amountType) async {
+    String tempNote = note == "" ? "".toString() : note;
     Map<String, dynamic> map = {
-      "type": "Debit",
-      "amount": amount,
-      "date": Timestamp.fromDate(dateTime),
-      "note": tempNote,
-
-    };
-
-    await allTranscationRef
-        .doc(google.currentUser.id)
-        .collection(accountName)
-        .doc()
-        .setData(map);
-
-    DocumentSnapshot doc = await Firestore.instance
-        .collection("UserAccouts")
-        .doc(google.currentUser.id)
-        .collection("allUsersList")
-        .doc(accountName)
-        .get();
-    int total = int.parse(amount) + doc["inDebit"];
-    Map<String, dynamic> map2 = {"inDebit": total};
-
-    await Firestore.instance
-        .collection("UserAccouts")
-        .doc(google.currentUser.id)
-        .collection("allUsersList")
-        .doc(accountName)
-        .update(map2);
-  }
-
-  static Future creditAmount(
-      String amount,  DateTime dateTime, String accountName,String note) async {
-    String tempNote=note==""?"".toString() :note;
-    Map<String, dynamic> map = {
-      "type": "Credit",
+      "type": amountType,
       "amount": amount,
       "date": Timestamp.fromDate(dateTime),
       "note": tempNote,
@@ -147,10 +114,11 @@ class FirebaseCenter {
         .collection("allUsersList")
         .doc(accountName)
         .update(map2);
+
+    commonFuntion(accountName);
   }
 
-  static deleteParticularTranscationList(
-      DocumentSnapshot doc, String name) async {
+  deleteParticularTranscationList(DocumentSnapshot doc, String name) async {
     DocumentSnapshot userDoc = await Firestore.instance
         .collection("UserAccouts")
         .doc(google.currentUser.id)
@@ -205,4 +173,49 @@ class FirebaseCenter {
       }
     }
   }
+
+  commonFuntion(String accountName) async {
+    int totalCredit = 0;
+    int totalDebit = 0;
+    QuerySnapshot qc = await allTranscationRef
+        .doc(google.currentUser.id)
+        .collection(accountName)
+        .getDocuments();
+    print("********************** Entered commonFuntion");
+    List<DocumentSnapshot> dc = qc.docs;
+
+    for (DocumentSnapshot d in dc) {
+      if ("Credit" == d["type"]) {
+        totalCredit = totalCredit + int.parse(d["amount"]);
+      } else {
+        totalDebit = totalDebit + int.parse(d["amount"]);
+      }
+    }
+
+    print("******$totalDebit******");
+    print("******$totalCredit******");
+
+    DocumentSnapshot doc = await Firestore.instance
+        .collection("UserAccouts")
+        .doc(google.currentUser.id)
+        .collection("allUsersList")
+        .doc(accountName)
+        .get();
+    Map<String, dynamic> map2 = {
+      "inDebit": totalDebit,
+      "inCredit": totalCredit
+    };
+
+    await Firestore.instance
+        .collection("UserAccouts")
+        .doc(google.currentUser.id)
+        .collection("allUsersList")
+        .doc(accountName)
+        .update(map2);
+
+    totalCredit = 0;
+    totalCredit = 0;
+  }
 }
+
+final $fireBase = FirebaseCenter();

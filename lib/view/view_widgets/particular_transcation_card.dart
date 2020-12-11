@@ -119,7 +119,7 @@ class _TranscationCardState extends State<TranscationCard> {
                                     minWidth: 100,
                                     height: 35,
                                     onPressed: () async {
-                                      FirebaseCenter
+                                      $fireBase
                                           .deleteParticularTranscationList(
                                               widget.doc, widget.name);
                                       triggerSnakbar();
@@ -276,7 +276,7 @@ class _TranscationCardState extends State<TranscationCard> {
                               minWidth: 100,
                               height: 35,
                               onPressed: () async {
-                                FirebaseCenter.deleteParticularTranscationList(
+                                $fireBase.deleteParticularTranscationList(
                                     widget.doc, widget.name);
                                 triggerSnakbar();
                                 Navigator.pop(context);

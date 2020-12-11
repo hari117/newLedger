@@ -34,7 +34,7 @@ class GlobalState extends ChangeNotifier
 
   hangleSignIn(GoogleSignInAccount account) {
     if (account != null) {
-      FirebaseCenter.checkUsersInFireBase(google.currentUser.id);
+      $fireBase.checkUsersInFireBase(google.currentUser.id);
 
       isAuth=true;
       notifyListeners();
