@@ -47,7 +47,7 @@ class _TranscationScreenState extends State<TranscationScreen> {
           _transcationAmountController.text=widget.documentSnapshot["amount"];
           print("**** ${widget.documentSnapshot["note"]}****");
           _noteController.text=widget.documentSnapshot["note"];
-          _dateTimeController.text=DateFormat('dd M yyyy').format(widget.documentSnapshot["date"].toDate()).toString();
+          _dateTimeController.text=DateFormat('dd-M-yyyy').format(widget.documentSnapshot["date"].toDate()).toString();
           indentiItem="Credit";
         });
 
@@ -507,7 +507,7 @@ class _TranscationScreenState extends State<TranscationScreen> {
             mainAxisSize: MainAxisSize.max,
             children: [
               $helperFile.H60(),
-              Row(
+         /*     Row(
                 children: [
                   Expanded(child: Container(height: 45,child:searchTextFeild())),
                  // $helperFile.W20(),
@@ -521,7 +521,7 @@ class _TranscationScreenState extends State<TranscationScreen> {
 
                 ],
               ),
-              $helperFile.H20(),
+              $helperFile.H20(),*/
               StreamBuilder(
                 stream: Firestore.instance
                     .collection("UserAccouts")
